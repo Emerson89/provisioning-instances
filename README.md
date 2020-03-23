@@ -1,4 +1,4 @@
-#provider-instance
+# provider-instance
 ##Provisioning instance on aws with terraform##
 # Run the command
 #terraform init
