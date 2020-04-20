@@ -1,8 +1,7 @@
 ##The first step to using Terraform is typically to configure the provider(s) you want to use.
 provider "aws" { 
 	region = "us-east-1"
-	shared_credentials_file = "~/.aws/credentials"
-	profile = "LOGIN_USER_AWS"
+	profile = "customprofile"
 }
 
 resource "aws_instance" "git" {
