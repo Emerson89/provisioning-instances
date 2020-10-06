@@ -66,13 +66,12 @@ module "ec2" {
 | associate\_public\_ip\_address | Vincula um IP público à instância | `bool` | `false` | no |
 | cpu\_credits | Opção de créditos de CPU da instância ("unlimited" ou "standard") | `string` | `"standard"` | no |
 | disable\_api\_termination | Controla a proteção de destruição (terminate) da instância | `bool` | `true` | no |
-| ebs\_block\_device | Lista com maps de configuração de volumes adicionais da instância | `list` | `[]` | no |
+| ebs\_block\_device | Lista com maps de configuração de volumes adicionais da instância | `list` | `[]` | yes |
 | ebs\_optimized | Controla se a instância será provisionada como EBS-optimized | `bool` | `false` | no |
 | instance\_count | Número de instâncias que serão provisionadas | `number` | `1` | no |
 | instance\_type | Tipo (classe) da instância | `any` | `""` | yes |
 | key\_name | Nome do Key Pair a ser usado para a instância | `string` | `""` | yes |
 | name | Nome da instância | `any` | n/a | yes |
-| private\_ip | IP privado da instância na VPC | `string` | `""` | no |
 | root\_block\_device | Lista com maps de configuração do volume raiz da instância | `list` | n/a | no |
 | subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | yes |
 | vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | yes |
