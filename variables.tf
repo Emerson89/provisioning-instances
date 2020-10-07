@@ -1,7 +1,7 @@
 variable "ingress_ports" {
   type        = list(number)
   description = "list of ingress ports"
-  default     = [22, 80]
+  default     = [22]
 }
 
 variable "egress_ports" {
@@ -29,6 +29,20 @@ variable "ami" {
 variable "instance_type" {
   description = "Tipo (classe) da instância"
   default = ""
+}
+
+variable "name" {
+  description = "Nome da instância"
+}
+
+variable "tags" {
+  description = "Map de tags da instância e dos volumes"
+  default     = {}
+}
+
+variable "instance_count" {
+  description = "Número de instâncias que serão provisionadas"
+  default     = 1
 }
 
 variable "key_name" {

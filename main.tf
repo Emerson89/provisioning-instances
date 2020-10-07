@@ -41,7 +41,8 @@ resource "aws_key_pair" "generated_key" {
 }
 
 resource "aws_instance" "git" {
-	ami = var.ami
+	count = var.instance_count
+  ami = var.ami
 	instance_type = var.instance_type
   key_name      = aws_key_pair.generated_key.key_name
 	security_groups = ["${aws_security_group.allow_sec.id}"]
@@ -62,13 +63,19 @@ ebs_optimized = var.ebs_optimized
     }
   }
 
-  volume_tags = {
-    Name = "vol_by_terraform"
-  }
+  tags = merge(
+    {
+      "Name" = var.instance_count > 1 ? format("%s-%d", var.name, count.index + 1) : var.name
+    },
+    var.tags,
+  )
 
-	tags = {
-	  Name = "git by Terraform"
-	}
+  volume_tags = merge(
+    {
+      "Name" = var.instance_count > 1 ? format("%s-%d", var.name, count.index + 1) : var.name
+    },
+    var.tags,
+  )
 
   provisioner "local-exec" {
     command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem" 

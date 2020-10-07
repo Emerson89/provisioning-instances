@@ -4,6 +4,7 @@
 
 ## Dependencies
 ![Badge](https://img.shields.io/badge/AWS%20-Access--key-blue)
+![Badge](https://img.shields.io/badge/AWS%20-secret--key-blue)
 
 ## Terraform Module - AWS - EC2
 
@@ -11,22 +12,27 @@ Example module for provisioning, pay attention to the PATH of the cloned reposit
 
 ```hcl
 module "ec2" {
-  source = "../../provider-instance/"
-
-  profile = "Custom_profile"
+  source = "../provider-instance/"
+  
+  name = "git by terraform"
+  profile = "CustomProfile"
   ami = "ami-02e98f78"
   instance_type = "t2.micro"
   region = "us-east-1"
   key_name = "my-key"
 
-  vpc_id = "vpc-id"
+  vpc_id = "vpc-id"  
   subnet_id = "subnet-id"
-    
+
   ebs_block_device = [{
     device_name         = "/dev/sda1"
     volume_type         = "standard"
     volume_size         = 10
   }]
+ 
+  tags = {
+    Environment = "git by terraform"
+  }
 }
 ```
 ```
@@ -46,6 +52,16 @@ module "ec2" {
   cpu_credits = "unlimited"
 }
 ```
+### Instances Multiplan
+
+```hcl
+module "ec2" {
+  # ...
+
+  instance_count = 3
+}
+```
+
 ## Requirements
 
 | Name | Version |
@@ -54,9 +70,8 @@ module "ec2" {
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| aws | n/a |
+* provider.aws: version = "~> 3.9"
+* provider.tls: version = "~> 2.2"
 
 ## Inputs
 
@@ -71,11 +86,11 @@ module "ec2" {
 | instance\_count | Número de instâncias que serão provisionadas | `number` | `1` | no |
 | instance\_type | Tipo (classe) da instância | `any` | `""` | yes |
 | key\_name | Nome do Key Pair a ser usado para a instância | `string` | `""` | yes |
-| name | Nome da instância | `any` | n/a | yes |
+| name | Nome da instância | `any` | ` ` | yes |
 | root\_block\_device | Lista com maps de configuração do volume raiz da instância | `list` | n/a | no |
 | subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | yes |
 | vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | yes |
-| tags | Map de tags da instância e dos volumes | `map` | `{}` | no |
+| tags | Map de tags da instância e dos volumes | `map` | `{}` | yes |
 | Region | Região onde será provionado a instância | `string` | `""` | yes |
 
 ## Licença
