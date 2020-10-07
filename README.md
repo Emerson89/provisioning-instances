@@ -73,8 +73,8 @@ module "ec2" {
 | key\_name | Nome do Key Pair a ser usado para a instância | `string` | `""` | yes |
 | name | Nome da instância | `any` | n/a | yes |
 | root\_block\_device | Lista com maps de configuração do volume raiz da instância | `list` | n/a | no |
-| subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | no |
-| vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | no |
+| subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | yes |
+| vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | yes |
 | tags | Map de tags da instância e dos volumes | `map` | `{}` | no |
 | Region | Região onde será provionado a instância | `string` | `""` | yes |
 

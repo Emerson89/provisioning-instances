@@ -48,7 +48,6 @@ variable "ebs_optimized" {
 }
 
 variable "vpc_id" {
-  description = "Lista com maps de configuração do volume raiz da instância"
   type = string
   default = ""
 }
