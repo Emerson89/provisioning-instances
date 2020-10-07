@@ -71,8 +71,9 @@ ebs_optimized = var.ebs_optimized
 	}
 
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.key.private_key_pem}' > my-key.pem"
+    command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem" 
   }  
+
   credit_specification {
     cpu_credits = var.cpu_credits
   }
