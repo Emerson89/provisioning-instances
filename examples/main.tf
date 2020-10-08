@@ -1,5 +1,5 @@
 module "ec2" {
-  source = "../provider-instance/"
+  source = "../"
   
   name = "git by terraform"
   profile = "CustomProfile"
