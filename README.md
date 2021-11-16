@@ -31,6 +31,7 @@ key_name = "my-key"
 vpc_id = "vpc-abcde"  
 subnet_id = "subnet-abcde"
 vpc_cidr_block = "0.0.0.0/0"
+ingress_ports = ["22", "80"]
 ```
 ```
 terraform init 
@@ -47,6 +48,8 @@ terraform apply -var-file="teste.tfvars"
 | ebs_size | ebs size instance | `number` | `8` | no |
 | ebs\_optimized | Controls whether the instance will be provisioned as EBS-optimized | `bool` | `false` | no |
 | instance\_count | Number of instances that will be provisioned | `number` | `1` | no |
+| ingress_ports | Ingress port sg | `list` | `"[22]"` | no |
+| engress_ports | Engress port sg | `list` | `"[0]"` | no |
 | instance\_type | Type (class) of instance | `any` | `"t3.micro"` | no |
 | key\_name | Key Pair name to use for the instance | `string` | `""` | yes |
 | name | instance name | `any` | ` ` | yes |

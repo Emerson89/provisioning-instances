@@ -12,6 +12,18 @@ variable "ami" {
   description = "ID da AMI usada para provisionar a instância"
 }
 
+variable "ingress_ports" {
+  type        = list(number)
+  description = "list of ingress ports"
+  default     = [22]
+}
+
+variable "egress_ports" {
+  type        = list(number)
+  description = "list of engress ports"
+  default     = [0]
+}
+
 variable "instance_type" {
   description = "Tipo (classe) da instância"
   default = "t3.micro"

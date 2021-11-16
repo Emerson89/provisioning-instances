@@ -9,9 +9,11 @@ variable "egress_ports" {
   description = "list of engress ports"
   default     = [0]
 }
+
 variable "ami" {
   description = "ID da AMI usada para provisionar a instância"
 }
+
 variable "instance_type" {
   description = "Tipo (classe) da instância"
   default = "t3.micro"
