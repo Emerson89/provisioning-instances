@@ -53,7 +53,7 @@ terraform apply -var-file="teste.tfvars"
 | subnet\_id | Subnet ID where the instance will be provisioned | `string` | `""` | yes |
 | vpc\_id | vpc id where the instance will be provisioned | `string` | `""` | yes |
 | tags | Instance and Volume Tag Map | `map` | `{}` | no |
-| region | Region where the instance will be provided | `string` | `"us-east-1"` | yes |
+| region | Region where the instance will be provided | `string` | `""` | yes |
 | profile | aws user profile | `string` | `""` | yes |
 | vpc_cidr_block | CIDR VPC | `string` | `""`| yes |
 | dev | Name device volume ebs | `string` | `/dev/sda1/` | no
