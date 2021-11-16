@@ -3,70 +3,35 @@
 ![Badge](https://img.shields.io/badge/terraform-aws-red)
 
 ## Dependencies
-![Badge](https://img.shields.io/badge/AWS%20-Access--key-blue)
-![Badge](https://img.shields.io/badge/AWS%20-secret--key-blue)
 
-## Terraform Module - AWS - EC2
+- aws user with access-key secret-key
 
-Example module for provisioning, pay attention to the PATH of the cloned repository on your machine in source
+## Terraform variable file
 
-```hcl
-module "ec2" {
-  source = "../provider-instance/"
-  
-  name = "git by terraform"
-  profile = "CustomProfile"
-  ami = "ami-02e98f78"
-  instance_type = "t2.micro"
-  region = "us-east-1"
-  key_name = "my-key"
-
-  vpc_id = "vpc-id"  
-  subnet_id = "subnet-id"
-
-  ebs_block_device = [{
-    device_name         = "/dev/sda1"
-    volume_type         = "standard"
-    volume_size         = 10
-  }]
- 
-  tags = {
-    Environment = "git by terraform"
-  }
-}
-```
-```
-terraform init
-terraform plan
-terraform apply
-```
-### CPU Credits
-
-If the instance is of type T2 or T3, the variable `cpu_credits` can be used
-to enable [T2 / T3 Unlimited] mode[t-unlimited-docs]:
+Example file .tfvars for provisioning
 
 ```hcl
-module "ec2" {
-  # ...
-
-  cpu_credits = "unlimited"
-}
+name = "ec2 by terraform"
+profile = "CUSTOMPROFILE"
+ami = "ami-abcde"
+instance_type = "t3.micro"
+region = "us-east-1"
+key_name = "my-key"
+vpc_id = "vpc-abcde"  
+subnet_id = "subnet-abcde"
+vpc_cidr_block = "0.0.0.0/0"
 ```
-### Instances Multiplan
-
-```hcl
-module "ec2" {
-  # ...
-
-  instance_count = 3
-}
+```
+terraform init 
+terraform plan -var-file="teste.tfvars"
+terraform apply -var-file="teste.tfvars"
 ```
 
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12 |
+| terraform | ~> 1.0.0 |
 
 ## Providers
 
@@ -78,20 +43,21 @@ module "ec2" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | ami | ID da AMI usada para provisionar a instância | `any` | `""` | yes |
-| associate\_public\_ip\_address | Vincula um IP público à instância | `bool` | `false` | no |
 | cpu\_credits | Opção de créditos de CPU da instância ("unlimited" ou "standard") | `string` | `"standard"` | no |
-| disable\_api\_termination | Controla a proteção de destruição (terminate) da instância | `bool` | `true` | no |
-| ebs\_block\_device | Lista com maps de configuração de volumes adicionais da instância | `list` | `[]` | yes |
+| ebs_size | ebs size instancia | `number` | `8` | no |
 | ebs\_optimized | Controla se a instância será provisionada como EBS-optimized | `bool` | `false` | no |
 | instance\_count | Número de instâncias que serão provisionadas | `number` | `1` | no |
-| instance\_type | Tipo (classe) da instância | `any` | `""` | yes |
+| instance\_type | Tipo (classe) da instância | `any` | `"t3.micro"` | no |
 | key\_name | Nome do Key Pair a ser usado para a instância | `string` | `""` | yes |
 | name | Nome da instância | `any` | ` ` | yes |
-| root\_block\_device | Lista com maps de configuração do volume raiz da instância | `list` | n/a | no |
 | subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | yes |
 | vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | yes |
-| tags | Map de tags da instância e dos volumes | `map` | `{}` | yes |
-| Region | Região onde será provionado a instância | `string` | `""` | yes |
+| tags | Map de tags da instância e dos volumes | `map` | `{}` | no |
+| region | Região onde será provionado a instância | `string` | `"us-east-1"` | yes |
+| profile | Profile de usuario aws | `string` | `""` | yes |
+| vpc_cidr_block | CIDR VPC | `string` | `""`| yes |
+| dev | Name device volume ebs | `string` | `/dev/sda1/` | no
+| type | Type volume ebs | `string` | `gp2` | no
 
 ## Licença
 GLPv3

@@ -1,23 +1,20 @@
 variable "region" {
   type = string
   description = "Região para provisionar os recursos"
-  default = ""
 }
 
 variable "profile" {
   type = string
   description = "Perfil com permissões para provisionar os recursos da AWS"
-  default = ""
 }
 
 variable "ami" {
   description = "ID da AMI usada para provisionar a instância"
-  default = ""
 }
 
 variable "instance_type" {
   description = "Tipo (classe) da instância"
-  default = ""
+  default = "t3.micro"
 }
 
 variable "name" {
@@ -37,32 +34,36 @@ variable "instance_count" {
 variable "key_name" {
   type = string
   description = "Nome do Key Pair a ser usado para a instância"
-  default     = ""
 }
 
 variable "cpu_credits" {
   description = "Opção de créditos de CPU da instância (\"unlimited\" ou \"standard\")"
-  default     = ""
+  default     = "standard"
 }
 
 variable "vpc_id" {
-  type = string
-  default = ""
+  description = "VPC id da instancia"
 }
 
 variable "vpc_cidr_block" {
-  default = ""
+  description = "CIDR_block VPC"
 }
 
 variable "subnet_id" {
-  type = string
-  default = ""
+  description = "Subnet da instancia"
 }
 
 variable "ebs_size" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
+  default = 8
 }
 
-variable security_groups {
-  description = "SG atrelada a instance"
+variable "dev" {
+  description = "Name device volume ebs"
+  default = "/dev/sda1"
+}
+
+variable "type" {
+  description = "Type de volume ebs"
+  default = "gp2"
 }

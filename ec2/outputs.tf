@@ -5,7 +5,7 @@ output "public_dns" {
 
 output "vpc_security_group_ids" {
   description = "Lista dos IDs dos security groups vinculados às instâncias"
-  value       = aws_instance.main.*.vpc_security_group_ids
+  value       = aws_instance.main.*.security_groups
 }
 
 output "tags" {

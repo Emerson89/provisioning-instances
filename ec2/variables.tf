@@ -1,11 +1,20 @@
-variable "ami" {
-  description = "ID da AMI usada para provisionar a instância"
-  default = ""
+variable "ingress_ports" {
+  type        = list(number)
+  description = "list of ingress ports"
+  default     = [22]
 }
 
+variable "egress_ports" {
+  type        = list(number)
+  description = "list of engress ports"
+  default     = [0]
+}
+variable "ami" {
+  description = "ID da AMI usada para provisionar a instância"
+}
 variable "instance_type" {
   description = "Tipo (classe) da instância"
-  default = ""
+  default = "t3.micro"
 }
 
 variable "ebs_optimized" {
@@ -30,17 +39,15 @@ variable "instance_count" {
 variable "key_name" {
   type = string
   description = "Nome do Key Pair a ser usado para a instância"
-  default     = "key"
 }
 
 variable "cpu_credits" {
   description = "Opção de créditos de CPU da instância (\"unlimited\" ou \"standard\")"
-  default     = ""
+  default     = "standard"
 }
 
 variable "subnet_id" {
-  type = string
-  default = ""
+  description = "Subnet da instancia"
 }
 
 variable "ebs_block_device" {
@@ -49,6 +56,10 @@ variable "ebs_block_device" {
   default     = []
 }
 
-variable security_groups {
-  description = "SG atrelada a instance"
+variable "vpc_cidr_block" {
+  description = "CIDR_block VPC"
+}
+
+variable "vpc_id" {
+  description = "VPC id da instancia"
 }

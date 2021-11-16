@@ -10,27 +10,32 @@ terraform {
 module "ec2" {
   source = "./ec2"
   
-  name = "var.name"
-  ami = "var.ami"
-  instance_type = "var.instance_type"
-  key_name = "var.key_name"
-  security_groups = var.security_groups
+  name = var.name
+  ami = var.ami
+  instance_type = var.instance_type
+  key_name = var.key_name
+  cpu_credits = var.cpu_credits
+  instance_count = var.instance_count
+
+  vpc_id = var.vpc_id  
+  subnet_id = var.subnet_id
+  vpc_cidr_block = var.vpc_cidr_block
 
   ebs_block_device = [{
-	device_name         = "/dev/sda1"
-    volume_type         = "gp2"
+	  device_name         = var.dev
+    volume_type         = var.type
     volume_size         = var.ebs_size
   }]
 
   tags = {
-    Environment = "var.tags"
+    Environment = "ec2 by terraform"
   }
 }
 
-module "security-group" {
-	source = "./security-group"
+#module "security-group" {
+#	source = "./security-group"
 
-    vpc_id = "var.vpc_id"  
-    vpc_cidr_block = "var.vpc_cidr_block"
+#    vpc_id = var.vpc_id  
+#    vpc_cidr_block = var.vpc_cidr_block
 
-}
+#}

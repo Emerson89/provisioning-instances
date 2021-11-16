@@ -1,3 +1,34 @@
+resource "aws_security_group" "allow_sec" {
+  name        = "allow_sec"
+  description = "SG terraform, allow_sec"
+  vpc_id = var.vpc_id
+
+ dynamic "ingress" {
+    iterator = port
+    for_each = var.ingress_ports
+    content {
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
+      cidr_blocks = ["${var.vpc_cidr_block}"]
+    }
+  }
+
+ dynamic "egress" {
+    iterator = port
+    for_each = var.egress_ports
+    content {
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
+tags = {
+    Name = "SG allow by Terraform"
+  }
+}
 resource "tls_private_key" "key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -13,9 +44,8 @@ resource "aws_instance" "main" {
   ami = var.ami
 	instance_type = var.instance_type
   key_name      = aws_key_pair.generated_key.key_name
-  associate_public_ip_address = "true"
   subnet_id = var.subnet_id
-  vpc_security_group_ids = flatten([var.security_groups])
+  security_groups = ["${aws_security_group.allow_sec.id}"]
 
 ebs_optimized = var.ebs_optimized
   dynamic "ebs_block_device" {
