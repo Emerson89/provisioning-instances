@@ -6,6 +6,17 @@
 
 - aws user with access-key secret-key
 
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | ~> 1.0.0 |
+
+## Providers
+
+* provider.aws: version = "~> 3.9"
+* provider.tls: version = "~> 2.2"
+
 ## Terraform variable file
 
 Example file .tfvars for provisioning
@@ -26,17 +37,6 @@ terraform init
 terraform plan -var-file="teste.tfvars"
 terraform apply -var-file="teste.tfvars"
 ```
-
-## Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | ~> 1.0.0 |
-
-## Providers
-
-* provider.aws: version = "~> 3.9"
-* provider.tls: version = "~> 2.2"
 
 ## Inputs
 
