@@ -31,11 +31,3 @@ module "ec2" {
     Environment = "ec2 by terraform"
   }
 }
-
-#module "security-group" {
-#	source = "./security-group"
-
-#    vpc_id = var.vpc_id  
-#    vpc_cidr_block = var.vpc_cidr_block
-
-#}

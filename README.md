@@ -42,22 +42,22 @@ terraform apply -var-file="teste.tfvars"
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| ami | ID da AMI usada para provisionar a instância | `any` | `""` | yes |
-| cpu\_credits | Opção de créditos de CPU da instância ("unlimited" ou "standard") | `string` | `"standard"` | no |
-| ebs_size | ebs size instancia | `number` | `8` | no |
-| ebs\_optimized | Controla se a instância será provisionada como EBS-optimized | `bool` | `false` | no |
-| instance\_count | Número de instâncias que serão provisionadas | `number` | `1` | no |
-| instance\_type | Tipo (classe) da instância | `any` | `"t3.micro"` | no |
-| key\_name | Nome do Key Pair a ser usado para a instância | `string` | `""` | yes |
-| name | Nome da instância | `any` | ` ` | yes |
-| subnet\_id | ID da subnet onde a instância será provisionada | `string` | `""` | yes |
-| vpc\_id | ID da vpc onde a instância será provisionada | `string` | `""` | yes |
-| tags | Map de tags da instância e dos volumes | `map` | `{}` | no |
-| region | Região onde será provionado a instância | `string` | `"us-east-1"` | yes |
-| profile | Profile de usuario aws | `string` | `""` | yes |
+| ami | AMI ID used to provision the instance | `any` | `""` | yes |
+| cpu\_credits | Instance CPU credits option ("unlimited" or "standard")) | `string` | `"standard"` | no |
+| ebs_size | ebs size instance | `number` | `8` | no |
+| ebs\_optimized | Controls whether the instance will be provisioned as EBS-optimized | `bool` | `false` | no |
+| instance\_count | Number of instances that will be provisioned | `number` | `1` | no |
+| instance\_type | Type (class) of instance | `any` | `"t3.micro"` | no |
+| key\_name | Key Pair name to use for the instance | `string` | `""` | yes |
+| name | instance name | `any` | ` ` | yes |
+| subnet\_id | Subnet ID where the instance will be provisioned | `string` | `""` | yes |
+| vpc\_id | vpc id where the instance will be provisioned | `string` | `""` | yes |
+| tags | Instance and Volume Tag Map | `map` | `{}` | no |
+| region | Region where the instance will be provided | `string` | `"us-east-1"` | yes |
+| profile | aws user profile | `string` | `""` | yes |
 | vpc_cidr_block | CIDR VPC | `string` | `""`| yes |
 | dev | Name device volume ebs | `string` | `/dev/sda1/` | no
 | type | Type volume ebs | `string` | `gp2` | no
 
-## Licença
+## Licence
 GLPv3
