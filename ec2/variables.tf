@@ -1,15 +1,3 @@
-variable "region" {
-  type = string
-  description = "Região para provisionar os recursos"
-  default = ""
-}
-
-variable "profile" {
-  type = string
-  description = "Perfil com permissões para provisionar os recursos da AWS"
-  default = ""
-}
-
 variable "ami" {
   description = "ID da AMI usada para provisionar a instância"
   default = ""
@@ -18,6 +6,11 @@ variable "ami" {
 variable "instance_type" {
   description = "Tipo (classe) da instância"
   default = ""
+}
+
+variable "ebs_optimized" {
+  description = "Controla se a instância será provisionada como EBS-optimized"
+  default     = false
 }
 
 variable "name" {
@@ -37,7 +30,7 @@ variable "instance_count" {
 variable "key_name" {
   type = string
   description = "Nome do Key Pair a ser usado para a instância"
-  default     = ""
+  default     = "key"
 }
 
 variable "cpu_credits" {
@@ -45,22 +38,15 @@ variable "cpu_credits" {
   default     = ""
 }
 
-variable "vpc_id" {
-  type = string
-  default = ""
-}
-
-variable "vpc_cidr_block" {
-  default = ""
-}
-
 variable "subnet_id" {
   type = string
   default = ""
 }
 
-variable "ebs_size" {
+variable "ebs_block_device" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
+  type        = list
+  default     = []
 }
 
 variable security_groups {
