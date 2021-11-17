@@ -1,3 +1,23 @@
+
+variable "vpc_cidr_block" {
+  description = "CIDR_block VPC"
+}
+
+variable "name" {
+  description = "Nome da instância"
+}
+variable "vpc_id" {
+  description = "VPC id da instancia"
+}
+
+variable "ami" {
+  description = "ID da AMI usada para provisionar a instância"
+}
+
+variable "subnet_id" {
+  description = "Subnet da instancia"
+}
+
 variable "ingress_ports" {
   type        = list(number)
   description = "list of ingress ports"
@@ -10,10 +30,6 @@ variable "egress_ports" {
   default     = [0]
 }
 
-variable "ami" {
-  description = "ID da AMI usada para provisionar a instância"
-}
-
 variable "instance_type" {
   description = "Tipo (classe) da instância"
   default = "t3.micro"
@@ -22,10 +38,6 @@ variable "instance_type" {
 variable "ebs_optimized" {
   description = "Controla se a instância será provisionada como EBS-optimized"
   default     = false
-}
-
-variable "name" {
-  description = "Nome da instância"
 }
 
 variable "tags" {
@@ -48,20 +60,8 @@ variable "cpu_credits" {
   default     = "standard"
 }
 
-variable "subnet_id" {
-  description = "Subnet da instancia"
-}
-
 variable "ebs_block_device" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
   type        = list
   default     = []
-}
-
-variable "vpc_cidr_block" {
-  description = "CIDR_block VPC"
-}
-
-variable "vpc_id" {
-  description = "VPC id da instancia"
 }
