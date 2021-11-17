@@ -18,6 +18,11 @@ variable "subnet_id" {
   description = "Subnet da instancia"
 }
 
+variable "associate_public_ip_address" {
+  description = "Ip public instance"
+  default = true
+}
+
 variable "ingress_ports" {
   type        = list(number)
   description = "list of ingress ports"

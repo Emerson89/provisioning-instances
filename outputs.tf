@@ -3,3 +3,8 @@ output "public_dns" {
   value       = module.ec2.public_dns
 }
 
+output "tags" {
+  description = "List of tags assigned to the instances, if applicable"
+  value       = module.ec2.tags
+}
+

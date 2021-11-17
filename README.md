@@ -44,6 +44,7 @@ terraform apply -var-file="teste.tfvars"
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | ami | AMI ID used to provision the instance | `any` | `""` | yes |
+| associate_public_ip_address | associar ip public | `bool`| `"true"`| no |
 | cpu\_credits | Instance CPU credits option ("unlimited" or "standard")) | `string` | `"standard"` | no |
 | ebs_size | ebs size instance | `number` | `8` | no |
 | ebs\_optimized | Controls whether the instance will be provisioned as EBS-optimized | `bool` | `false` | no |

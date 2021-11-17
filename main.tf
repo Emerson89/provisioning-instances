@@ -16,6 +16,7 @@ module "ec2" {
   key_name = var.key_name
   cpu_credits = var.cpu_credits
   instance_count = var.instance_count
+  associate_public_ip_address = var.associate_public_ip_address
   ingress_ports = var.ingress_ports
   egress_ports = var.egress_ports
 

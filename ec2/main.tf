@@ -1,3 +1,4 @@
+resource "random_pet" "name" {}
 resource "aws_security_group" "allow_sec" {
   name        = "allow_sec"
   description = "SG terraform, allow_sec"
@@ -26,7 +27,7 @@ resource "aws_security_group" "allow_sec" {
 }
 
 tags = {
-    Name = "SG allow by Terraform"
+    Name = random_pet.name.id
   }
 }
 resource "tls_private_key" "key" {
@@ -43,6 +44,7 @@ resource "aws_instance" "main" {
 	count = var.instance_count
   ami = var.ami
 	instance_type = var.instance_type
+  associate_public_ip_address = var.associate_public_ip_address
   key_name      = aws_key_pair.generated_key.key_name
   subnet_id = var.subnet_id
   security_groups = ["${aws_security_group.allow_sec.id}"]
