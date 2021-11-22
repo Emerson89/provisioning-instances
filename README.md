@@ -22,16 +22,15 @@
 Example file .tfvars for provisioning
 
 ```hcl
-name = "ec2 by terraform"
-profile = "CUSTOMPROFILE"
-ami = "ami-abcde"
-instance_type = "t3.micro"
-region = "us-east-1"
-key_name = "my-key"
-vpc_id = "vpc-abcde"  
-subnet_id = "subnet-abcde"
+name           = "ec2 by terraform"
+profile        = "CUSTOMPROFILE"
+ami            = "ami-abcde"
+instance_type  = "TYPE-INSTANCE"
+region         = "REGION"
+key_name       = "my-key"
+vpc_id         = "vpc-abcde"
+subnet_id      = "subnet-abcde"
 vpc_cidr_block = "0.0.0.0/0"
-ingress_ports = ["22", "80"]
 ```
 ```
 terraform init 

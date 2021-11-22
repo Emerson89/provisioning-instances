@@ -1,10 +1,10 @@
 variable "region" {
-  type = string
+  type        = string
   description = "Região para provisionar os recursos"
 }
 
 variable "profile" {
-  type = string
+  type        = string
   description = "Perfil com permissões para provisionar os recursos da AWS"
 }
 
@@ -17,7 +17,7 @@ variable "name" {
 }
 
 variable "key_name" {
-  type = string
+  type        = string
   description = "Nome do Key Pair a ser usado para a instância"
 }
 
@@ -35,7 +35,7 @@ variable "subnet_id" {
 
 variable "associate_public_ip_address" {
   description = "Ip public instance"
-  default = true
+  default     = true
 }
 variable "ingress_ports" {
   type        = list(number)
@@ -51,7 +51,7 @@ variable "egress_ports" {
 
 variable "instance_type" {
   description = "Tipo (classe) da instância"
-  default = "t3.micro"
+  default     = "t3.micro"
 }
 
 variable "tags" {
@@ -72,15 +72,15 @@ variable "cpu_credits" {
 
 variable "ebs_size" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
-  default = 8
+  default     = 8
 }
 
 variable "dev" {
   description = "Name device volume ebs"
-  default = "/dev/sda1"
+  default     = "/dev/sda1"
 }
 
 variable "type" {
   description = "Type de volume ebs"
-  default = "gp2"
+  default     = "gp2"
 }

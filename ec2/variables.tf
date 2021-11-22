@@ -20,7 +20,7 @@ variable "subnet_id" {
 
 variable "associate_public_ip_address" {
   description = "Ip public instance"
-  default = true
+  default     = true
 }
 
 variable "ingress_ports" {
@@ -37,7 +37,7 @@ variable "egress_ports" {
 
 variable "instance_type" {
   description = "Tipo (classe) da instância"
-  default = "t3.micro"
+  default     = "t3.micro"
 }
 
 variable "ebs_optimized" {
@@ -56,7 +56,7 @@ variable "instance_count" {
 }
 
 variable "key_name" {
-  type = string
+  type        = string
   description = "Nome do Key Pair a ser usado para a instância"
 }
 
@@ -67,6 +67,6 @@ variable "cpu_credits" {
 
 variable "ebs_block_device" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
-  type        = list
+  type        = list(any)
   default     = []
 }

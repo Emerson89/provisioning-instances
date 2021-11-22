@@ -2,9 +2,9 @@ resource "random_pet" "name" {}
 resource "aws_security_group" "allow_sec" {
   name        = "allow_sec"
   description = "SG terraform, allow_sec"
-  vpc_id = var.vpc_id
+  vpc_id      = var.vpc_id
 
- dynamic "ingress" {
+  dynamic "ingress" {
     iterator = port
     for_each = var.ingress_ports
     content {
@@ -15,7 +15,7 @@ resource "aws_security_group" "allow_sec" {
     }
   }
 
- dynamic "egress" {
+  dynamic "egress" {
     iterator = port
     for_each = var.egress_ports
     content {
@@ -24,9 +24,9 @@ resource "aws_security_group" "allow_sec" {
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
     }
-}
+  }
 
-tags = {
+  tags = {
     Name = random_pet.name.id
   }
 }
@@ -41,15 +41,15 @@ resource "aws_key_pair" "generated_key" {
 }
 
 resource "aws_instance" "main" {
-	count = var.instance_count
-  ami = var.ami
-	instance_type = var.instance_type
+  count                       = var.instance_count
+  ami                         = var.ami
+  instance_type               = var.instance_type
   associate_public_ip_address = var.associate_public_ip_address
-  key_name      = aws_key_pair.generated_key.key_name
-  subnet_id = var.subnet_id
-  security_groups = ["${aws_security_group.allow_sec.id}"]
+  key_name                    = aws_key_pair.generated_key.key_name
+  subnet_id                   = var.subnet_id
+  security_groups             = ["${aws_security_group.allow_sec.id}"]
 
-ebs_optimized = var.ebs_optimized
+  ebs_optimized = var.ebs_optimized
   dynamic "ebs_block_device" {
     for_each = var.ebs_block_device
     content {
@@ -79,8 +79,8 @@ ebs_optimized = var.ebs_optimized
   )
 
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem" 
-  }  
+    command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem"
+  }
 
   credit_specification {
     cpu_credits = var.cpu_credits
