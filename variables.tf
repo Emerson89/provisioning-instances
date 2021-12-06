@@ -8,9 +8,9 @@ variable "profile" {
   description = "Perfil com permissões para provisionar os recursos da AWS"
 }
 
-variable "ami" {
-  description = "ID da AMI usada para provisionar a instância"
-}
+#variable "ami" {
+#  description = "ID da AMI usada para provisionar a instância"
+#}
 
 variable "name" {
   description = "Nome da instância"
@@ -72,7 +72,7 @@ variable "cpu_credits" {
 
 variable "ebs_size" {
   description = "Lista com maps de configuração de volumes adicionais da instância"
-  default     = 8
+  default     = 10
 }
 
 variable "dev" {

@@ -11,7 +11,7 @@ module "ec2" {
   source = "./ec2"
 
   name                        = var.name
-  ami                         = var.ami
+  #ami                         = var.ami
   instance_type               = var.instance_type
   key_name                    = var.key_name
   cpu_credits                 = var.cpu_credits

@@ -40,12 +40,29 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.key.public_key_openssh
 }
 
+data "aws_ami" "web"{
+  most_recent = true
+
+  owners = ["self"]
+
+  filter {
+    name = "name"
+
+    values = ["packer-*"]
+  }
+}
 resource "aws_instance" "main" {
   count                       = var.instance_count
-  ami                         = var.ami
+  ami                         = data.aws_ami.web.id
   instance_type               = var.instance_type
   associate_public_ip_address = var.associate_public_ip_address
   key_name                    = aws_key_pair.generated_key.key_name
+  user_data                   = <<EOF
+	#! /bin/bash
+  sudo yum install https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+	sudo systemctl start amazon-ssm-agent
+  sudo systemctl enable amazon-ssm-agent
+	EOF
   subnet_id                   = var.subnet_id
   security_groups             = ["${aws_security_group.allow_sec.id}"]
 
