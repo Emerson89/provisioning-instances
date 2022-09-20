@@ -1,49 +1,3 @@
-variable "aws_region" {
-  type        = string
-  description = "Região para provisionar os recursos"
-  default     = "us-east-1"
-}
-
-variable "profile" {
-  type        = string
-  description = "Perfil com permissões para provisionar os recursos da AWS"
-}
-
-variable "name" {
-  description = "Nome da instância"
-  default     = "My-ec2-terraform"
-}
-
-variable "key_name" {
-  type        = string
-  description = "Nome do Key Pair a ser usado para a instância"
-  default     = "my-key"
-}
-
-variable "associate_public_ip_address" {
-  description = "Ip public instance"
-  default     = true
-}
-
-variable "ingress_ports" {
-  type        = list(number)
-  description = "list of ingress ports"
-  default     = [22]
-}
-
-variable "egress_ports" {
-  type        = list(number)
-  description = "list of engress ports"
-  default     = [0]
-}
-
-variable "instance_type" {
-  description = "Tipo (classe) da instância"
-  default     = "t3.micro"
-}
-
-### Variables rds
-
 variable "identifier" {
   description = "The name of the RDS instance"
   type        = string
@@ -123,6 +77,18 @@ variable "password" {
   type        = string
   default     = null
   sensitive   = true
+}
+
+variable "vpc_security_group_ids" {
+  description = "List of VPC security groups to associate"
+  type        = list(string)
+  default     = null
+}
+
+variable "db_subnet_group_name" {
+  description = "List of VPC security groups to associate"
+  type        = string
+  default     = null
 }
 
 variable "availability_zone" {

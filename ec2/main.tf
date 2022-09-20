@@ -1,35 +1,3 @@
-resource "random_pet" "name" {}
-resource "aws_security_group" "allow_sec" {
-  name        = "allow_sec"
-  description = "SG terraform, allow_sec"
-  vpc_id      = var.vpc_id
-
-  dynamic "ingress" {
-    iterator = port
-    for_each = var.ingress_ports
-    content {
-      from_port   = port.value
-      to_port     = port.value
-      protocol    = "tcp"
-      cidr_blocks = ["${var.vpc_cidr_block}"]
-    }
-  }
-
-  dynamic "egress" {
-    iterator = port
-    for_each = var.egress_ports
-    content {
-      from_port   = port.value
-      to_port     = port.value
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
-
-  tags = {
-    Name = random_pet.name.id
-  }
-}
 resource "tls_private_key" "key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -40,67 +8,178 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.key.public_key_openssh
 }
 
-data "aws_ami" "web"{
-  most_recent = true
-
-  owners = ["self"]
-
-  filter {
-    name = "name"
-
-    values = ["packer-*"]
-  }
-}
 resource "aws_instance" "main" {
-  count                       = var.instance_count
-  ami                         = data.aws_ami.web.id
-  instance_type               = var.instance_type
+  count = var.instance_count
+
+  ami                  = var.ami
+  instance_type        = var.instance_type
+  cpu_core_count       = var.cpu_core_count
+  cpu_threads_per_core = var.cpu_threads_per_core
+  user_data            = var.user_data
+  user_data_base64     = var.user_data_base64
+  hibernation          = var.hibernation
+
+  availability_zone      = var.availability_zone
+  subnet_id              = var.subnet_id
+  vpc_security_group_ids = var.vpc_security_group_ids
+
+  key_name             = aws_key_pair.generated_key.key_name
+  monitoring           = var.monitoring
+  get_password_data    = var.get_password_data
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+
   associate_public_ip_address = var.associate_public_ip_address
-  key_name                    = aws_key_pair.generated_key.key_name
-  user_data                   = <<EOF
-	#! /bin/bash
-  sudo yum install https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-	sudo systemctl start amazon-ssm-agent
-  sudo systemctl enable amazon-ssm-agent
-	EOF
-  subnet_id                   = var.subnet_id
-  security_groups             = ["${aws_security_group.allow_sec.id}"]
+  private_ip                  = var.private_ip
+  secondary_private_ips       = var.secondary_private_ips
+  ipv6_address_count          = var.ipv6_address_count
+  ipv6_addresses              = var.ipv6_addresses
 
   ebs_optimized = var.ebs_optimized
-  dynamic "ebs_block_device" {
-    for_each = var.ebs_block_device
+
+  dynamic "capacity_reservation_specification" {
+    for_each = var.capacity_reservation_specification != null ? [var.capacity_reservation_specification] : []
     content {
-      device_name           = ebs_block_device.value.device_name
-      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
-      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
-      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
-      iops                  = lookup(ebs_block_device.value, "iops", null)
-      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", true)
-      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
-      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      capacity_reservation_preference = lookup(capacity_reservation_specification.value, "capacity_reservation_preference", null)
+
+      dynamic "capacity_reservation_target" {
+        for_each = lookup(capacity_reservation_specification.value, "capacity_reservation_target", [])
+        content {
+          capacity_reservation_id = lookup(capacity_reservation_target.value, "capacity_reservation_id", null)
+        }
+      }
     }
   }
 
-  tags = merge(
-    {
-      "Name" = var.instance_count > 1 ? format("%s-%d", var.name, count.index + 1) : var.name
-    },
-    var.tags,
-  )
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
+    content {
+      delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
+      encrypted             = lookup(root_block_device.value, "encrypted", null)
+      iops                  = lookup(root_block_device.value, "iops", null)
+      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      volume_size           = lookup(root_block_device.value, "volume_size", null)
+      volume_type           = lookup(root_block_device.value, "volume_type", null)
+      throughput            = lookup(root_block_device.value, "throughput", null)
+      tags                  = lookup(root_block_device.value, "tags", null)
+    }
+  }
 
-  volume_tags = merge(
-    {
-      "Name" = var.instance_count > 1 ? format("%s-%d", var.name, count.index + 1) : var.name
-    },
-    var.tags,
-  )
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+      throughput            = lookup(ebs_block_device.value, "throughput", null)
+    }
+  }
+
+  dynamic "ephemeral_block_device" {
+    for_each = var.ephemeral_block_device
+    content {
+      device_name  = ephemeral_block_device.value.device_name
+      no_device    = lookup(ephemeral_block_device.value, "no_device", null)
+      virtual_name = lookup(ephemeral_block_device.value, "virtual_name", null)
+    }
+  }
+
+  dynamic "metadata_options" {
+    for_each = var.metadata_options != null ? [var.metadata_options] : []
+    content {
+      http_endpoint               = lookup(metadata_options.value, "http_endpoint", "enabled")
+      http_tokens                 = lookup(metadata_options.value, "http_tokens", "optional")
+      http_put_response_hop_limit = lookup(metadata_options.value, "http_put_response_hop_limit", "1")
+      instance_metadata_tags      = lookup(metadata_options.value, "instance_metadata_tags", null)
+    }
+  }
+
+  dynamic "network_interface" {
+    for_each = var.network_interface
+    content {
+      device_index          = network_interface.value.device_index
+      network_interface_id  = lookup(network_interface.value, "network_interface_id", null)
+      delete_on_termination = lookup(network_interface.value, "delete_on_termination", false)
+    }
+  }
+
+  dynamic "launch_template" {
+    for_each = var.launch_template != null ? [var.launch_template] : []
+    content {
+      id      = lookup(var.launch_template, "id", null)
+      name    = lookup(var.launch_template, "name", null)
+      version = lookup(var.launch_template, "version", null)
+    }
+  }
 
   provisioner "local-exec" {
     command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem"
   }
 
+  enclave_options {
+    enabled = var.enclave_options_enabled
+  }
+
+  source_dest_check                    = length(var.network_interface) > 0 ? null : var.source_dest_check
+  disable_api_termination              = var.disable_api_termination
+  instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
+  placement_group                      = var.placement_group
+  tenancy                              = var.tenancy
+  host_id                              = var.host_id
+
   credit_specification {
     cpu_credits = var.cpu_credits
   }
 
+  timeouts {
+    create = lookup(var.timeouts, "create", null)
+    update = lookup(var.timeouts, "update", null)
+    delete = lookup(var.timeouts, "delete", null)
+  }
+
+  tags        = merge({ "Name" = var.name }, var.tags)
+  volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
+}
+
+resource "aws_iam_role" "ec2-role" {
+  name = "ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "ssm_policy" {
+  name = "allow-ec2-ssm"
+  for_each = toset(
+    ["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
+      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  ])
+  roles      = [aws_iam_role.ec2-role.name]
+  policy_arn = each.key
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2_profile"
+  role = aws_iam_role.ec2-role.name
+
+}
+
+resource "aws_eip" "blog" {
+  instance = aws_instance.main[0].id
+  vpc      = true
 }

@@ -5,6 +5,6 @@ output "public_dns" {
 
 output "tags" {
   description = "List of tags assigned to the instances, if applicable"
-  value       = module.ec2.tags
+  value       = module.ec2.tags_all
 }
 
