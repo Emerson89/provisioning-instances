@@ -52,7 +52,7 @@ provider "aws" {
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 1.0.0 |
+| terraform | ~> 1.2.9 |
 
 ## Providers
 
