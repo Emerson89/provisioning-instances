@@ -1,3 +1,53 @@
+##Security-group
+variable "sgname" {
+  description = "Name to be used on security-group created"
+  type        = string
+  default     = "sg ec2 by terraform"
+}
+
+variable "description" {
+  description = "Description of security group"
+  type        = string
+  default     = "Security Group managed by Terraform"
+}
+
+variable "vpc_id" {
+  description = "ID of the VPC where to create security group"
+  type        = string
+  default     = ""
+}
+
+variable "ingress" {
+  type = map(any)
+  default = {
+    "ingress_rule" = {
+      "from_port"   = "80"
+      "to_port"     = "80"
+      "protocol"    = "tcp"
+      "cidr_blocks" = ["0.0.0.0/0"]
+    },
+    "other_ingress_rule" = {
+      "from_port"   = "22"
+      "to_port"     = "22"
+      "protocol"    = "tcp"
+      "cidr_blocks" = ["0.0.0.0/0"]
+    }
+  }
+}
+
+variable "engress" {
+  type = map(any)
+  default = {
+    "engress_rule" = {
+      "from_port"   = "-1"
+      "to_port"     = "0"
+      "protocol"    = "tcp"
+      "cidr_blocks" = ["0.0.0.0/0"]
+    }
+  }
+}
+
+#####Ec2
 variable "name" {
   description = "Name to be used on EC2 instance created"
   type        = string
@@ -19,12 +69,6 @@ variable "associate_public_ip_address" {
 variable "availability_zone" {
   description = "AZ to start the instance in"
   type        = string
-  default     = null
-}
-
-variable "capacity_reservation_specification" {
-  description = "Describes an instance's Capacity Reservation targeting option"
-  type        = any
   default     = null
 }
 
@@ -76,18 +120,6 @@ variable "hibernation" {
   default     = null
 }
 
-variable "host_id" {
-  description = "ID of a dedicated host that the instance will be assigned to. Use when an instance is to be launched on a specific dedicated host"
-  type        = string
-  default     = null
-}
-
-variable "instance_initiated_shutdown_behavior" {
-  description = "Shutdown behavior for the instance. Amazon defaults this to stop for EBS-backed instances and terminate for instance-store instances. Cannot be set on instance-store instance" # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/terminating-instances.html#Using_ChangingInstanceInitiatedShutdownBehavior
-  type        = string
-  default     = null
-}
-
 variable "instance_type" {
   description = "The type of instance to start"
   type        = string
@@ -109,7 +141,7 @@ variable "ipv6_addresses" {
 variable "key_name" {
   description = "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "launch_template" {
@@ -169,7 +201,7 @@ variable "source_dest_check" {
 variable "subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "tags" {

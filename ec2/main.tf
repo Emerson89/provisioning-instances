@@ -21,11 +21,11 @@ resource "aws_instance" "main" {
 
   availability_zone      = var.availability_zone
   subnet_id              = var.subnet_id
-  vpc_security_group_ids = var.vpc_security_group_ids
+  vpc_security_group_ids = [aws_security_group.main.id]
 
-  key_name             = aws_key_pair.generated_key.key_name
-  monitoring           = var.monitoring
-  get_password_data    = var.get_password_data
+  key_name          = aws_key_pair.generated_key.key_name
+  monitoring        = var.monitoring
+  get_password_data = var.get_password_data
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
   associate_public_ip_address = var.associate_public_ip_address
@@ -35,20 +35,6 @@ resource "aws_instance" "main" {
   ipv6_addresses              = var.ipv6_addresses
 
   ebs_optimized = var.ebs_optimized
-
-  dynamic "capacity_reservation_specification" {
-    for_each = var.capacity_reservation_specification != null ? [var.capacity_reservation_specification] : []
-    content {
-      capacity_reservation_preference = lookup(capacity_reservation_specification.value, "capacity_reservation_preference", null)
-
-      dynamic "capacity_reservation_target" {
-        for_each = lookup(capacity_reservation_specification.value, "capacity_reservation_target", [])
-        content {
-          capacity_reservation_id = lookup(capacity_reservation_target.value, "capacity_reservation_id", null)
-        }
-      }
-    }
-  }
 
   dynamic "root_block_device" {
     for_each = var.root_block_device
@@ -126,10 +112,8 @@ resource "aws_instance" "main" {
 
   source_dest_check                    = length(var.network_interface) > 0 ? null : var.source_dest_check
   disable_api_termination              = var.disable_api_termination
-  instance_initiated_shutdown_behavior = var.instance_initiated_shutdown_behavior
   placement_group                      = var.placement_group
   tenancy                              = var.tenancy
-  host_id                              = var.host_id
 
   credit_specification {
     cpu_credits = var.cpu_credits

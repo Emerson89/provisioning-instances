@@ -10,42 +10,26 @@
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 1.0.0 |
+| terraform | ~> 1.2.9 |
 
 ## Providers
 
 * provider.aws: version = "~> 3.9"
 * provider.tls: version = "~> 2.2"
 
-## Terraform variable file
-
-Example file .tfvars for provisioning
-
-```hcl
-name           = "ec2 by terraform"
-profile        = "CUSTOMPROFILE"
-ami            = "ami-abcde"
-instance_type  = "TYPE-INSTANCE"
-region         = "REGION"
-key_name       = "my-key"
-vpc_id         = "vpc-abcde"
-subnet_id      = "subnet-abcde"
-vpc_cidr_block = "0.0.0.0/0"
-```
 ```
 terraform init 
-terraform plan -var-file="teste.tfvars"
-terraform apply -var-file="teste.tfvars"
+terraform plan 
+terraform apply
 ```
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| ami | AMI ID used to provision the instance | `any` | `""` | yes |
+| ami | AMI ID used to provision the instance | `any` | `""` | no |
 | associate_public_ip_address | associar ip public | `bool`| `"true"`| no |
-| cpu\_credits | Instance CPU credits option ("unlimited" or "standard")) | `string` | `"standard"` | no |
-| ebs_size | ebs size instance | `number` | `8` | no |
+| cpu\_credits | Instance CPU credits option ("unlimited" or "standard")) | `string` | `"null"` | no |
 | ebs\_optimized | Controls whether the instance will be provisioned as EBS-optimized | `bool` | `false` | no |
 | instance\_count | Number of instances that will be provisioned | `number` | `1` | no |
 | ingress_ports | Ingress port sg | `list` | `"[22]"` | no |
