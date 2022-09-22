@@ -8,19 +8,21 @@ provider "aws" {
 
   endpoints {
     ec2 = "http://localhost:4566"
+    iam = "http://localhost:4566"
+
   }
 }
 
 terraform {
   required_version = "~> 1.2.9"
 
-  backend "s3" {
-    bucket  = "s3-tfstates-terraform"
-    key     = "terraform-ec2.tfstate"
-    region  = "us-east-1"
-    profile = "local"
-  }
-}
+  #backend "s3" {
+  #  bucket  = "s3-tfstates-terraform"
+  #  key     = "terraform-ec2.tfstate"
+  #  region  = "us-east-1"
+  #  profile = "local"
+  #}
+} #
 
 module "ec2" {
   source = "./ec2"
