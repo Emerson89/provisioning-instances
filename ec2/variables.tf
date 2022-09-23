@@ -51,7 +51,12 @@ variable "engress" {
 variable "name" {
   description = "Name to be used on EC2 instance created"
   type        = string
-  default     = ""
+  default     = "ec2 by terraform"
+}
+
+variable "eip" {
+  description = "Habilitar eip"
+  default = "false"  
 }
 
 variable "ami" {
@@ -141,7 +146,7 @@ variable "ipv6_addresses" {
 variable "key_name" {
   description = "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
   type        = string
-  default     = ""
+  default     = "key-pem"
 }
 
 variable "launch_template" {

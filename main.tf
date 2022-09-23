@@ -1,28 +1,18 @@
 provider "aws" {
   region  = var.aws_region
   profile = var.profile
-
-  skip_credentials_validation = true
-  skip_metadata_api_check     = true
-  skip_requesting_account_id  = true
-
-  endpoints {
-    ec2 = "http://localhost:4566"
-    iam = "http://localhost:4566"
-
-  }
 }
 
 terraform {
   required_version = "~> 1.2.9"
 
-  #backend "s3" {
-  #  bucket  = "s3-tfstates-terraform"
-  #  key     = "terraform-ec2.tfstate"
-  #  region  = "us-east-1"
-  #  profile = "local"
-  #}
-} #
+  backend "s3" {
+    bucket  = "s3-tfstates-terraform"
+    key     = "terraform-ec2.tfstate"
+    region  = "us-east-1"
+    profile = "local"
+  }
+}
 
 module "ec2" {
   source = "./ec2"
@@ -31,8 +21,10 @@ module "ec2" {
   ami                         = data.aws_ami.img.id
   instance_type               = "t3.micro"
   subnet_id                   = ""
+  vpc_id                      = ""
   associate_public_ip_address = true
   key_name                    = "key-pem"
+  eip                         = "false"
 
   ingress = {
     "ingress_rule_1" = {

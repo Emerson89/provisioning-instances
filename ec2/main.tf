@@ -163,7 +163,8 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 
 }
 
-resource "aws_eip" "blog" {
+resource "aws_eip" "elasticip" {
+  count = var.eip == "true" ? 1 : 0
   instance = aws_instance.main[0].id
   vpc      = true
 }

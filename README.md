@@ -41,7 +41,7 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    cloudwatch = "http://localhost:4566" <-- necessário para uso com localstack
+    iam        = "http://localhost:4566" <-- necessário para uso com localstack
     ec2        = "http://localhost:4566" <-- necessário para uso com localstack
 
   }
@@ -59,30 +59,29 @@ provider "aws" {
 * provider.aws: version = "~> 3.9"
 * provider.tls: version = "~> 2.2"
 
-## Terraform variable file
+## Terraform backend s3
 
-Example file .tfvars for provisioning
+Create a s3 to store tfstate
 
 ```hcl
-name           = "ec2 by terraform"
-profile        = "local"
-region         = "us-east-1"
-ami            = "i-099392def6b574255"
-instance_type  = "t3.micro"
-key_name       = "my-key"
-vpc_cidr_block = "0.0.0.0/0"
+   backend "s3" {
+    bucket  = "s3-tfstates-terraform"
+    key     = "terraform-ec2.tfstate"
+    region  = "us-east-1"
+    profile = "local"
+  }
 ```
 ```
 terraform init 
-terraform plan -var-file="vars.tfvars"
-terraform apply -var-file="vars.tfvars"
+terraform plan 
+terraform apply
 ```
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| ami | AMI ID used to provision the instance | `any` | `""` | yes |
+| data ami | AMI ID used to provision the instance | `any` | `"ubuntu/*"` | no |
 | key\_name | Key Pair name to use for the instance | `string` | `""` | yes |
 | region | Region where the instance will be provided | `string` | `""` | yes |
 | profile | aws user profile | `string` | `""` | yes |
