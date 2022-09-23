@@ -13,26 +13,16 @@ resource "aws_instance" "main" {
 
   ami                  = var.ami
   instance_type        = var.instance_type
-  cpu_core_count       = var.cpu_core_count
-  cpu_threads_per_core = var.cpu_threads_per_core
   user_data            = var.user_data
   user_data_base64     = var.user_data_base64
-  hibernation          = var.hibernation
-
   availability_zone      = var.availability_zone
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [aws_security_group.main.id]
-
   key_name          = aws_key_pair.generated_key.key_name
   monitoring        = var.monitoring
-  get_password_data = var.get_password_data
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
-
   associate_public_ip_address = var.associate_public_ip_address
   private_ip                  = var.private_ip
-  secondary_private_ips       = var.secondary_private_ips
-  ipv6_address_count          = var.ipv6_address_count
-  ipv6_addresses              = var.ipv6_addresses
 
   ebs_optimized = var.ebs_optimized
 
@@ -74,16 +64,6 @@ resource "aws_instance" "main" {
     }
   }
 
-  dynamic "metadata_options" {
-    for_each = var.metadata_options != null ? [var.metadata_options] : []
-    content {
-      http_endpoint               = lookup(metadata_options.value, "http_endpoint", "enabled")
-      http_tokens                 = lookup(metadata_options.value, "http_tokens", "optional")
-      http_put_response_hop_limit = lookup(metadata_options.value, "http_put_response_hop_limit", "1")
-      instance_metadata_tags      = lookup(metadata_options.value, "instance_metadata_tags", null)
-    }
-  }
-
   dynamic "network_interface" {
     for_each = var.network_interface
     content {
@@ -106,14 +86,7 @@ resource "aws_instance" "main" {
     command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem"
   }
 
-  enclave_options {
-    enabled = var.enclave_options_enabled
-  }
-
-  source_dest_check                    = length(var.network_interface) > 0 ? null : var.source_dest_check
   disable_api_termination              = var.disable_api_termination
-  placement_group                      = var.placement_group
-  tenancy                              = var.tenancy
 
   credit_specification {
     cpu_credits = var.cpu_credits

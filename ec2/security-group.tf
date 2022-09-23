@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "ingress_rule" {
 
 resource "aws_security_group_rule" "egress_rule" {
   type              = "egress"
-  for_each          = var.engress
+  for_each          = var.egress
   from_port         = each.value["from_port"]
   to_port           = each.value["to_port"]
   protocol          = each.value["protocol"]

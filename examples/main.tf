@@ -6,16 +6,10 @@ provider "aws" {
 terraform {
   required_version = "~> 1.2.9"
 
-  backend "s3" {
-    bucket  = "s3-tfstates-terraform"
-    key     = "terraform-ec2.tfstate"
-    region  = "us-east-1"
-    profile = "local"
-  }
 }
 
 module "ec2" {
-  source = "./ec2"
+  source = "../ec2"
 
   name                        = "ec2 by terraform"
   ami                         = data.aws_ami.img.id
