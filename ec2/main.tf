@@ -11,16 +11,16 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "main" {
   count = var.instance_count
 
-  ami                  = var.ami
-  instance_type        = var.instance_type
-  user_data            = var.user_data
-  user_data_base64     = var.user_data_base64
-  availability_zone      = var.availability_zone
-  subnet_id              = var.subnet_id
-  vpc_security_group_ids = [aws_security_group.main.id]
-  key_name          = aws_key_pair.generated_key.key_name
-  monitoring        = var.monitoring
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  user_data                   = var.user_data
+  user_data_base64            = var.user_data_base64
+  availability_zone           = var.availability_zone
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = [aws_security_group.main.id]
+  key_name                    = aws_key_pair.generated_key.key_name
+  monitoring                  = var.monitoring
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   associate_public_ip_address = var.associate_public_ip_address
   private_ip                  = var.private_ip
 
@@ -86,7 +86,7 @@ resource "aws_instance" "main" {
     command = "echo '${tls_private_key.key.private_key_pem}' > ${var.key_name}.pem"
   }
 
-  disable_api_termination              = var.disable_api_termination
+  disable_api_termination = var.disable_api_termination
 
   credit_specification {
     cpu_credits = var.cpu_credits
@@ -137,7 +137,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 }
 
 resource "aws_eip" "elasticip" {
-  count = var.eip == "true" ? 1 : 0
+  count    = var.eip == "true" ? 1 : 0
   instance = aws_instance.main[0].id
   vpc      = true
 }

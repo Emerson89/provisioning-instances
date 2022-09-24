@@ -19,8 +19,8 @@ variable "vpc_id" {
 
 variable "ingress" {
   description = "Ingress rules security group"
-  type = map(any)
-  default = {}
+  type        = map(any)
+  default     = {}
 }
 
 variable "egress" {
@@ -44,7 +44,7 @@ variable "name" {
 
 variable "eip" {
   description = "Habilitar eip"
-  default = "false"  
+  default     = "false"
 }
 
 variable "ami" {
@@ -187,6 +187,6 @@ variable "timeouts" {
 
 variable "instance_count" {
   description = "Número de instâncias que serão provisionadas"
-  type = number
+  type        = number
   default     = 1
 }
