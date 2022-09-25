@@ -1,10 +1,4 @@
 ##variables security-group
-variable "sgname" {
-  description = "Name to be used on security-group created"
-  type        = string
-  default     = "sg ec2 by terraform"
-}
-
 variable "description" {
   description = "Description of security group"
   type        = string

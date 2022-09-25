@@ -1,11 +1,11 @@
 resource "aws_security_group" "main" {
-  name        = var.sgname
+  name        = var.name
   description = var.description
   vpc_id      = var.vpc_id
 
   tags = merge(
     {
-      "Name" = format("%s", var.sgname)
+      "Name" = format("%s", var.name)
     },
     var.tags,
   )
