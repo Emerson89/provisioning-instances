@@ -1,4 +1,4 @@
-# Provisioning Ec2 using Terraform - AWS
+# Provisioning ec2 using Terraform - AWS
 
 ![Badge](https://img.shields.io/badge/terraform-aws-red)
 
@@ -30,8 +30,9 @@ aws ec2 --endpoint-url=http://localhost:4566 describe-instances --filters Name=t
 ```
 Para simular usando script em python segue exemplo *instances.py* requer boto3
 
-```
-main.tf
+```hcl
+
+## provider
 
 provider "aws" {
   region                      = var.region
@@ -49,7 +50,6 @@ provider "aws" {
   }
 }
 ```
-
 ## Requirements
 
 | Name | Version |
