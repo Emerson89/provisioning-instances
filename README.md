@@ -76,7 +76,7 @@ Create a s3 to store tfstate
 ## Single instance
 ```hcl
 module "ec2" {
-  source = "../ec2"
+  source = "./ec2"
 
   name                        = "ec2 by terraform"
   ami                         = data.aws_ami.img.id
@@ -129,7 +129,7 @@ data "aws_ami" "img" {
 ## Multiple instances
 ```hcl
 module "ec2" {
-  source = "../ec2"
+  source = "./ec2"
 
   name                        = "ec2 by terraform"
   ami                         = data.aws_ami.img.id
@@ -181,14 +181,30 @@ data "aws_ami" "img" {
 }
 ```
 ```
-Em examples/ execute
-
 terraform init 
 terraform plan 
 terraform apply
 
 PEM key is saved in the current directory
 ```
+## How about a CI
+Used gitlab-runner in shell
+
+For best practices use backend s3 to store the tf.state required to create a backet s3
+
+Variable gitlab-ci
+
+- AWS_ACCESS_KEY <-- used mask
+- AWS_SECRET_KEY <-- used mask
+- AWS_DEFAULT_REGION <-- create a default
+
+To use gitlab-ci use the example **.gitlab-ci.yml**
+
+Create environments *prd* and *dev* to segment environments across regions
+
+<img src="https://i.imgur.com/FjSEqq8.png"
+     alt="Markdown Monster icon"
+     style="float: left; margin-right: 10px;" />
 
 ## Inputs
 
@@ -202,7 +218,7 @@ PEM key is saved in the current directory
 | associate_public_ip_address | associar ip public | `bool`| `"true"`| no |
 | eip | associar ip elastic | `bool`| `"false"`| no |
 | ingress | ingress rules security group | `map` | `{}` | yes |
-| egress | egress rules security group | `map` | `{ "engress_rule" = { "from_port" = "-1" "to_port" = "0" "protocol" = "tcp" "cidr_blocks" = ["0.0.0.0/0"]}` | no |
+| egress | egress rules security group | `map` | `{ "engress_rule" = { "from_port" = "0" "to_port" = "0" "protocol" = "-1" "cidr_blocks" = ["0.0.0.0/0"]}` | no |
 | cpu\_credits | Instance CPU credits option ("unlimited" or "standard")) | `string` | `""` | no |
 | availability_zone | zones availability | `string` | `null` | no
 | disable_api_termination | If true, enables EC2 Instance Termination Protection | `bool` | `null` | no

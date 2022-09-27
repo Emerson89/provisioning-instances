@@ -1,7 +1,4 @@
-provider "aws" {
-  region  = var.aws_region
-  profile = var.profile
-}
+provider "aws" {}
 
 terraform {
   required_version = "~> 1.2.9"
@@ -9,7 +6,7 @@ terraform {
 }
 
 module "ec2" {
-  source = "../ec2"
+  source = "./ec2"
 
   name                        = "ec2 by terraform"
   ami                         = data.aws_ami.img.id
