@@ -6,6 +6,7 @@
 
 - aws user with access-key secret-key
 - Python3
+- terraform ~> 1.2.9
 
 ## Usando localstack
 
@@ -187,25 +188,6 @@ terraform apply
 
 PEM key is saved in the current directory
 ```
-## How about a CI
-Used gitlab-runner in shell
-
-For best practices use backend s3 to store the tf.state required to create a backet s3
-
-Variable gitlab-ci
-
-- AWS_ACCESS_KEY <-- used mask
-- AWS_SECRET_KEY <-- used mask
-- AWS_DEFAULT_REGION <-- create a default
-
-To use gitlab-ci use the example **.gitlab-ci.yml**
-
-Create environments *prd* and *dev* to segment environments across regions
-
-<img src="https://i.imgur.com/FjSEqq8.png"
-     alt="Markdown Monster icon"
-     style="float: left; margin-right: 10px;" />
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
