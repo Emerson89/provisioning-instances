@@ -1,3 +1,15 @@
+variable "aws_region" {
+  type        = string
+  description = "Região para provisionar os recursos"
+  default     = "us-east-1"
+}
+
+variable "profile" {
+  type        = string
+  description = "Perfil com permissões para provisionar os recursos da AWS"
+  default     = "local"
+}
+
 ##variables security-group
 variable "description" {
   description = "Description of security group"
@@ -14,7 +26,20 @@ variable "vpc_id" {
 variable "ingress" {
   description = "Ingress rules security group"
   type        = map(any)
-  default     = {}
+  default = {
+    "ingress_rule_1" = {
+      "from_port"   = "80"
+      "to_port"     = "80"
+      "protocol"    = "tcp"
+      "cidr_blocks" = ["0.0.0.0/0"]
+    },
+    "ingress_rule_2" = {
+      "from_port"   = "22"
+      "to_port"     = "22"
+      "protocol"    = "tcp"
+      "cidr_blocks" = ["0.0.0.0/0"]
+    }
+  }
 }
 
 variable "egress" {
@@ -36,15 +61,21 @@ variable "name" {
   default     = "ec2 by terraform"
 }
 
+variable "values" {
+  description = "Values datasource ami"
+  type        = string
+  default     = "ubuntu/*"
+}
+
+variable "owner" {
+  description = "Owner ami"
+  type        = any
+  default     = "amazon"
+}
+
 variable "eip" {
   description = "Habilitar eip"
   default     = "false"
-}
-
-variable "ami" {
-  description = "ID of AMI to use for the instance"
-  type        = string
-  default     = ""
 }
 
 variable "associate_public_ip_address" {
@@ -55,8 +86,8 @@ variable "associate_public_ip_address" {
 
 variable "availability_zone" {
   description = "AZ to start the instance in"
-  type        = string
-  default     = null
+  type        = list(any)
+  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "cpu_credits" {
@@ -128,7 +159,15 @@ variable "private_ip" {
 variable "root_block_device" {
   description = "Customize details about the root block device of the instance. See Block Devices below for details"
   type        = list(any)
-  default     = []
+  default = [
+    {
+      volume_type = "gp2"
+      volume_size = 50
+      tags = {
+        Name = "root-block"
+      }
+    },
+  ]
 }
 
 variable "subnet_id" {
@@ -140,7 +179,9 @@ variable "subnet_id" {
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
   type        = map(string)
-  default     = {}
+  default = {
+    Environment = "hml"
+  }
 }
 
 variable "user_data" {
@@ -158,13 +199,15 @@ variable "user_data_base64" {
 variable "volume_tags" {
   description = "A mapping of tags to assign to the devices created by the instance at launch time"
   type        = map(string)
-  default     = {}
+  default = {
+    Environment = "hml"
+  }
 }
 
 variable "enable_volume_tags" {
   description = "Whether to enable volume tags (if enabled it conflicts with root_block_device tags)"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "vpc_security_group_ids" {

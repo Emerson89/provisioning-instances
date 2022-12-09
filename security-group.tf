@@ -1,4 +1,4 @@
-resource "aws_security_group" "main" {
+resource "aws_security_group" "this" {
   name        = var.name
   description = var.description
   vpc_id      = var.vpc_id
@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "ingress_rule" {
   to_port           = each.value["to_port"]
   protocol          = each.value["protocol"]
   cidr_blocks       = each.value["cidr_blocks"]
-  security_group_id = aws_security_group.main.id
+  security_group_id = aws_security_group.this.id
 }
 
 resource "aws_security_group_rule" "egress_rule" {
@@ -28,5 +28,5 @@ resource "aws_security_group_rule" "egress_rule" {
   to_port           = each.value["to_port"]
   protocol          = each.value["protocol"]
   cidr_blocks       = each.value["cidr_blocks"]
-  security_group_id = aws_security_group.main.id
+  security_group_id = aws_security_group.this.id
 }
