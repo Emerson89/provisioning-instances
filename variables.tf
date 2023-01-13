@@ -1,33 +1,3 @@
-##variables security-group
-variable "description" {
-  description = "Description of security group"
-  type        = string
-  default     = "Security Group managed by Terraform"
-}
-
-variable "vpc_id" {
-  description = "ID of the VPC where to create security group"
-  type        = string
-}
-
-variable "ingress" {
-  description = "Ingress rules security group"
-  type        = map(any)
-  default     = {}
-}
-
-variable "egress" {
-  type = map(any)
-  default = {
-    "engress_rule" = {
-      "from_port"   = "0"
-      "to_port"     = "0"
-      "protocol"    = "-1"
-      "cidr_blocks" = ["0.0.0.0/0"]
-    }
-  }
-}
-
 ##### variables Ec2
 variable "subnet_id" {
   description = "The VPC Subnet ID to launch in"
@@ -61,12 +31,6 @@ variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
   type        = bool
   default     = null
-}
-
-variable "availability_zone" {
-  description = "AZ to start the instance in"
-  type        = list(any)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "cpu_credits" {
@@ -108,7 +72,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
   type        = string
-  default     = "key-pem"
+  default     = "key"
 }
 
 variable "launch_template" {

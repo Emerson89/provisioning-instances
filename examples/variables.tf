@@ -10,20 +10,26 @@ variable "profile" {
   default     = "local"
 }
 
+variable "environment" {
+  description = "Env tags"
+  type        = string
+  default     = "Development"
+}
+
 ##variables security-group
+variable "sgname_ec2" {
+  description = "Name to be used the resources as identifier"
+  type        = string
+  default     = "ec2"
+}
+
 variable "description" {
   description = "Description of security group"
   type        = string
   default     = "Security Group managed by Terraform"
 }
 
-variable "vpc_id" {
-  description = "ID of the VPC where to create security group"
-  type        = string
-  default     = ""
-}
-
-variable "ingress" {
+variable "ingress_ec2" {
   description = "Ingress rules security group"
   type        = map(any)
   default = {
@@ -37,18 +43,6 @@ variable "ingress" {
       "from_port"   = "22"
       "to_port"     = "22"
       "protocol"    = "tcp"
-      "cidr_blocks" = ["0.0.0.0/0"]
-    }
-  }
-}
-
-variable "egress" {
-  type = map(any)
-  default = {
-    "engress_rule" = {
-      "from_port"   = "0"
-      "to_port"     = "0"
-      "protocol"    = "-1"
       "cidr_blocks" = ["0.0.0.0/0"]
     }
   }
@@ -82,12 +76,6 @@ variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
   type        = bool
   default     = null
-}
-
-variable "availability_zone" {
-  description = "AZ to start the instance in"
-  type        = list(any)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
 }
 
 variable "cpu_credits" {
