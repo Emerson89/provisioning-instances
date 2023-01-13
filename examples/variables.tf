@@ -117,7 +117,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
   type        = string
-  default     = "key-pem"
+  default     = "key"
 }
 
 variable "launch_template" {
@@ -156,12 +156,6 @@ variable "root_block_device" {
       }
     },
   ]
-}
-
-variable "subnet_id" {
-  description = "The VPC Subnet ID to launch in"
-  type        = string
-  default     = ""
 }
 
 variable "tags" {

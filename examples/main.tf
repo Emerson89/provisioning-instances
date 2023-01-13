@@ -1,5 +1,5 @@
 module "ec2" {
-  source = "../../ec2"
+  source = "git@github.com:Emerson89/provisioning-instances.git"
 
   name                        = var.name
   owner                       = var.owner
@@ -17,7 +17,7 @@ module "ec2" {
 }
 
 module "sg-ec2" {
-  source = "git@github.com:Emerson89.git//modules-terraform//sg"
+  source = "git@github.com:Emerson89/modules-terraform.git//sg"
 
   sgname      = var.sgname_ec2
   environment = var.environment
