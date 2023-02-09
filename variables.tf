@@ -10,7 +10,7 @@ variable "name" {
   default     = "ec2 by terraform"
 }
 
-variable "values" {
+variable "image_name" {
   description = "Values datasource ami"
   type        = string
   default     = "ubuntu/*"

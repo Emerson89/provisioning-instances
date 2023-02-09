@@ -4,7 +4,7 @@ data "aws_ami" "img" {
 
   filter {
     name   = "name"
-    values = ["${var.values}"]
+    values = ["${var.image_name}"]
   }
 }
 
@@ -27,7 +27,7 @@ resource "aws_instance" "this" {
   instance_type               = var.instance_type
   user_data                   = var.user_data
   user_data_base64            = var.user_data_base64
-  availability_zone           = element(data.aws_availability_zones.azs.name, count.index)
+  availability_zone           = element(data.aws_availability_zones.azs.names, count.index)
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.vpc_security_group_ids
   key_name                    = aws_key_pair.this.key_name
@@ -115,7 +115,7 @@ resource "aws_instance" "this" {
 }
 
 resource "aws_iam_role" "this" {
-  name = "ec2-role"
+  name = format("ec2-role-%s", var.name)
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -133,7 +133,7 @@ resource "aws_iam_role" "this" {
 }
 
 resource "aws_iam_policy_attachment" "this" {
-  name = "allow-ec2-ssm"
+  name = format("policy-ssm-%s", var.name)
   for_each = toset(
     ["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
       "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
@@ -143,13 +143,13 @@ resource "aws_iam_policy_attachment" "this" {
 }
 
 resource "aws_iam_instance_profile" "this" {
-  name = "ec2_profile"
+  name = format("ec2-role-%s", var.name)
   role = aws_iam_role.this.name
 
 }
 
 resource "aws_eip" "this" {
-  count    = var.eip == "true" ? 1 : 0
+  count    = var.eip ? 1 : 0
   instance = aws_instance.this[0].id
   vpc      = true
 }
