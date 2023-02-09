@@ -7,7 +7,7 @@ variable "subnet_id" {
 variable "name" {
   description = "Name to be used on EC2 instance created"
   type        = string
-  default     = "ec2 by terraform"
+  default     = "ec2-by-terraform"
 }
 
 variable "image_name" {
