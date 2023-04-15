@@ -2,6 +2,7 @@
 variable "subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = string
+  default     = ""
 }
 
 variable "name" {
@@ -138,7 +139,7 @@ variable "enable_volume_tags" {
 variable "vpc_security_group_ids" {
   description = "A list of security group IDs to associate with"
   type        = list(string)
-  default     = null
+  default     = ""
 }
 
 variable "timeouts" {
