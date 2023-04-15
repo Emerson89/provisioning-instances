@@ -1,9 +1,9 @@
 module "sg-ec2" {
-  source = "git@github.com:Emerson89/modules-terraform.git//sg?ref=main"
+  source = "git@github.com:Emerson89/terraform-modules.git//sg?ref=main"
 
   sgname      = "sgterraform"
-  environment = "env"
-  description = "tf"
+  environment = "development"
+  description = "Security group manager terraform"
   vpc_id      = ""
 
   tags = {

@@ -8,8 +8,8 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    iam        = "http://192.168.3.107:4566"
-    ec2        = "http://192.168.3.107:4566"
+    iam        = "http://localhost:4566"
+    ec2        = "http://localhost:4566"
 
   }
 }

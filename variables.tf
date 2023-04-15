@@ -25,13 +25,14 @@ variable "owner" {
 
 variable "eip" {
   description = "Enabled eip"
-  default     = "false"
+  type        = bool
+  default     = false
 }
 
 variable "associate_public_ip_address" {
   description = "Whether to associate a public IP address with an instance in a VPC"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "cpu_credits" {
