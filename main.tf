@@ -8,8 +8,6 @@ data "aws_ami" "img" {
   }
 }
 
-data "aws_availability_zones" "azs" {}
-
 resource "tls_private_key" "this" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -27,7 +25,6 @@ resource "aws_instance" "this" {
   instance_type               = var.instance_type
   user_data                   = var.user_data
   user_data_base64            = var.user_data_base64
-  availability_zone           = element(data.aws_availability_zones.azs.names, count.index)
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = var.vpc_security_group_ids
   key_name                    = aws_key_pair.this.key_name

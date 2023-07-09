@@ -4,7 +4,7 @@ module "sg-ec2" {
   sgname      = "sgterraform"
   environment = "development"
   description = "Security group manager terraform"
-  vpc_id      = ""
+  vpc_id      = "vpc-abcabcdabc1234"
 
   tags = {
     Environment = "Development"
@@ -23,11 +23,15 @@ module "ec2" {
   associate_public_ip_address = false
   key_name                    = "key"
   eip                         = false
+  subnet_id                   = "subnet-0397a0a1714227ce6"
+  image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+  owner                       = "099720109477"
 
   root_block_device = [
     {
       volume_type = "gp3"
-      volume_size = 50
+      volume_size = 10
+      #delete_on_termination = false
       tags = {
         Name = "root-block"
       }
