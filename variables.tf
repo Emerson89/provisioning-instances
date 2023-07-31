@@ -146,7 +146,7 @@ variable "enable_volume_tags" {
 variable "vpc_security_group_ids" {
   description = "A list of security group IDs to associate with"
   type        = list(string)
-  default     = []
+  default     = null
 }
 
 variable "timeouts" {

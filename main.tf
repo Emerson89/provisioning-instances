@@ -115,8 +115,6 @@ resource "aws_instance" "this" {
 }
 
 resource "aws_iam_role" "this" {
-  name = format("ec2-role-%s", var.name)
-
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -132,20 +130,18 @@ resource "aws_iam_role" "this" {
   })
 }
 
-resource "aws_iam_policy_attachment" "this" {
-  name = format("policy-ssm-%s", var.name)
+resource "aws_iam_role_policy_attachment" "this" {
   for_each = toset(
     ["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM",
-      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+      "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
   ])
-  roles      = [aws_iam_role.this.name]
+  roles      = aws_iam_role.this.name
   policy_arn = each.key
 }
 
 resource "aws_iam_instance_profile" "this" {
-  name = format("ec2-role-%s", var.name)
   role = aws_iam_role.this.name
-
 }
 
 resource "aws_eip" "this" {
