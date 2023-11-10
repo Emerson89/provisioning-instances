@@ -20,14 +20,10 @@ module "ec2" {
   source = "github.com/Emerson89/provisioning-instances.git//?ref=master"
 
   name                        = "ec2-terraform"
-  vpc_security_group_ids      = ["sg-abcabcabc"]
   instance_type               = "t3.micro"
   associate_public_ip_address = false
   key_name                    = "key"
   eip                         = false
-  subnet_id                   = ["subnet-abcabcabcabc"]
-  image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
-  owner                       = "099720109477"
 
   root_block_device = [
     {
