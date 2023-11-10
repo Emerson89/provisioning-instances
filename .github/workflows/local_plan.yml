@@ -11,10 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      - name: Configure credentians
-        uses: Emerson89/aws-cli@v1.0.0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          args: configure set local local --profile local
+          aws-access-key-id: local
+          aws-secret-access-key: local
+          aws-region: us-east-1
 
       - name: Start LocalStack
         run: |
