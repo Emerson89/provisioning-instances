@@ -1,6 +1,21 @@
 # Provisioning ec2 using Terraform - AWS
 
-## Usando localstack
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.9 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
+| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
+
+
+## Used localstack
 
 ```
 pip install localstack
@@ -16,13 +31,19 @@ Default output format [json]:
 ```
 Para mais informações segue repo localstack: https://github.com/localstack/localstack
 
-## Comando aws-cli
+## Command aws-cli
+#
 ```
 export AWS_PROFILE=local
 aws ec2 --endpoint-url=http://localhost:4566 describe-instances --filters Name=tag-key,Values=Name --query 'Reservations[*].Instances[*].{Instance:InstanceId,AZ:Placement.AvailabilityZone,Name:Tags[?Key==`Name`]|[0].Value}'
 ```
-Para simular usando script em python segue exemplo *instances.py* requer boto3
+#
+For used script in python *instances.py* required boto3
 
+```
+pip3 install boto3
+```
+#
 ```hcl
 
 ## provider
@@ -43,52 +64,46 @@ provider "aws" {
   }
 }
 ```
+#
 ## Example execute module
 ```hcl
 module "ec2" {
-  source = "../"
+  source = "github.com/Emerson89/provisioning-instances.git//?ref=master"
 
-  instance_count              = 1
   name                        = "ec2-terraform"
-  instance_type               = "t3.micro"
-  subnet_id                   = "subnet-abcabcabc"
   vpc_security_group_ids      = ["sg-abcabcabc"]
-  associate_public_ip_address = true
-  key_name                    = "key-name"
-  eip                         = true
+  instance_type               = "t3.micro"
+  associate_public_ip_address = false
+  key_name                    = "key"
+  eip                         = false
+  subnet_id                   = ["subnet-abcabcabcabc"]
+  image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
+  owner                       = "099720109477"
 
-  root_block_device  = var.root_block_device
-
-  tags = var.tags
+  root_block_device = [
+    {
+      volume_type = "gp3"
+      volume_size = 10
+      #delete_on_termination = false
+      tags = {
+        Name = "root-block"
+      }
+    },
+  ]
+  tags = {
+    Environment = "Development"
+  }
 }
 ```
-
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.2.9 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
-
-## Providers
-
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
-| <a name="provider_tls"></a> [tls](#provider\_tls) | n/a |
-
-## Modules
-
-No modules.
-
+#
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_eip.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_instance_profile.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
-| [aws_iam_policy_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy_attachment) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 | [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [tls_private_key.this](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
@@ -101,7 +116,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `false` | no |
 | <a name="input_cpu_credits"></a> [cpu\_credits](#input\_cpu\_credits) | The credit option for CPU usage (unlimited or standard) | `string` | `null` | no |
-| <a name="input_create_instance"></a> [create\_instance](#input\_create\_instance) | If true, the launched EC2 instance will have detailed monitoring enabled | `bool` | `false` | no |
+| <a name="input_create_instance"></a> [create\_instance](#input\_create\_instance) | If true, the launched EC2 instance will have detailed monitoring enabled | `bool` | `true` | no |
 | <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | If true, enables EC2 Instance Termination Protection | `bool` | `null` | no |
 | <a name="input_ebs_block_device"></a> [ebs\_block\_device](#input\_ebs\_block\_device) | Additional EBS block devices to attach to the instance | `list(map(string))` | `[]` | no |
 | <a name="input_ebs_optimized"></a> [ebs\_optimized](#input\_ebs\_optimized) | If true, the launched EC2 instance will be EBS-optimized | `bool` | `null` | no |
@@ -119,13 +134,13 @@ No modules.
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner ami | `any` | `"amazon"` | no |
 | <a name="input_private_ip"></a> [private\_ip](#input\_private\_ip) | Private IP address to associate with the instance in a VPC | `string` | `null` | no |
 | <a name="input_root_block_device"></a> [root\_block\_device](#input\_root\_block\_device) | Customize details about the root block device of the instance. See Block Devices below for details | `list(any)` | `[]` | no |
-| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The VPC Subnet ID to launch in | `list(string)` | n/a | yes |
+| <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The VPC Subnet ID to launch in | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A mapping of tags to assign to the resource | `map(string)` | `{}` | no |
 | <a name="input_timeouts"></a> [timeouts](#input\_timeouts) | Define maximum timeout for creating, updating, and deleting EC2 instance resources | `map(string)` | `{}` | no |
 | <a name="input_user_data"></a> [user\_data](#input\_user\_data) | The user data to provide when launching the instance. Do not pass gzip-compressed data via this argument; see user\_data\_base64 instead. | `string` | `null` | no |
 | <a name="input_user_data_base64"></a> [user\_data\_base64](#input\_user\_data\_base64) | Can be used instead of user\_data to pass base64-encoded binary data directly. Use this instead of user\_data whenever the value is not a valid UTF-8 string. For example, gzip-encoded user data must be base64-encoded and passed via this argument to avoid corruption. | `string` | `null` | no |
 | <a name="input_volume_tags"></a> [volume\_tags](#input\_volume\_tags) | A mapping of tags to assign to the devices created by the instance at launch time | `map(string)` | `{}` | no |
-| <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | A list of security group IDs to associate with | `list(string)` | `[]` | no |
+| <a name="input_vpc_security_group_ids"></a> [vpc\_security\_group\_ids](#input\_vpc\_security\_group\_ids) | A list of security group IDs to associate with | `list(string)` | `null` | no |
 
 ## Outputs
 

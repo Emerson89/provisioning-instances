@@ -136,7 +136,7 @@ resource "aws_iam_role_policy_attachment" "this" {
       "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
       "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
   ])
-  roles      = aws_iam_role.this.name
+  role       = aws_iam_role.this.name
   policy_arn = each.key
 }
 
@@ -147,5 +147,5 @@ resource "aws_iam_instance_profile" "this" {
 resource "aws_eip" "this" {
   count    = var.eip ? 1 : 0
   instance = aws_instance.this[0].id
-  vpc      = true
+  domain   = "vpc"
 }

@@ -3,12 +3,13 @@
 variable "create_instance" {
   description = "If true, the launched EC2 instance will have detailed monitoring enabled"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "subnet_id" {
   description = "The VPC Subnet ID to launch in"
   type        = list(string)
+  default     = [""]
 }
 
 variable "name" {
