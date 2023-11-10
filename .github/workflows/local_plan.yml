@@ -14,8 +14,8 @@ jobs:
       - name: Configure credentians
         uses: Emerson89/aws-cli@v1.0.0
         with:
-          args: configure --profile local
-          
+          args: configure set local local --profile local
+
       - name: Start LocalStack
         run: |
           pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
