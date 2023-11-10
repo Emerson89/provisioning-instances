@@ -1,6 +1,7 @@
 provider "aws" {
-  region  = "us-east-1"
-  profile = "local"
+  access_key = "test"
+  secret_key = "test"
+  region     = "us-east-1"
 
   ## necessário para uso com localstack
   skip_credentials_validation = true

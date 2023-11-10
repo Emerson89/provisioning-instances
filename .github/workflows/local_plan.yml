@@ -10,17 +10,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: local
-          aws-secret-access-key: local
-          aws-region: us-east-1
 
       - name: Start LocalStack
         run: |
-          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
+          pip install localstack terraform-local    # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
           
@@ -36,5 +29,5 @@ jobs:
       - name: Terraform Workflow
         working-directory: examples/
         run: |
-          terraform init
-          terraform plan
+          tflocal init
+          tflocal plan
