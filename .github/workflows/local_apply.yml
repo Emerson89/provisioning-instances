@@ -5,7 +5,7 @@ on:
         - master
         - dev
 jobs:
-  example-job:
+  job:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,7 +13,7 @@ jobs:
 
       - name: Start LocalStack
         run: |
-          pip install localstack awscli-local[ver1] # install LocalStack cli and awslocal
+          pip install localstack terraform-local    # install LocalStack cli and awslocal
           docker pull localstack/localstack         # Make sure to pull the latest version of the image
           localstack start -d                       # Start LocalStack in the background
           
@@ -29,5 +29,5 @@ jobs:
       - name: Terraform Workflow
         working-directory: examples/
         run: |
-          terraform init
-          terraform apply -auto-approve   
+          tflocal init
+          tflocal apply   

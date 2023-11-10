@@ -17,7 +17,7 @@ provider "aws" {
 
 ## EC2
 module "ec2" {
-  source = "github.com/Emerson89/provisioning-instances.git//?ref=dev"
+  source = "github.com/Emerson89/provisioning-instances.git//?ref=master"
 
   name                        = "ec2-terraform"
   instance_type               = "t3.micro"
