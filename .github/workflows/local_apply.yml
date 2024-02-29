@@ -11,14 +11,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start LocalStack
-        run: |
-          pip install localstack terraform-local    # install LocalStack cli and awslocal
-          docker pull localstack/localstack         # Make sure to pull the latest version of the image
-          localstack start -d                       # Start LocalStack in the background
-          
-          echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
-          localstack wait -t 30                     # to become ready before timing out 
-          echo "Startup complete"   
+        uses: LocalStack/setup-localstack@main
+        with:
+          image-tag: 'latest'
+          install-awslocal: 'true'   
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -28,5 +24,5 @@ jobs:
       - name: Terraform Workflow
         working-directory: examples/
         run: |
-          tflocal init
-          tflocal apply   
+          terrform init
+          terrform apply   
