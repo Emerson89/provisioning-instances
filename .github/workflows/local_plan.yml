@@ -2,10 +2,11 @@ name: Terraform PLAN
 on:
    push:
       branches:
-        - master
         - dev
+env:
+  TF_LOG: INFO
 jobs:
-  job:
+  plan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
