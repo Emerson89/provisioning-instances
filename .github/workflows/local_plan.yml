@@ -26,5 +26,5 @@ jobs:
       - name: Terraform Workflow
         working-directory: examples/
         run: |
-          tflocal init
-          tflocal plan
+          terraform init
+          terraform plan
