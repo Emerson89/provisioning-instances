@@ -25,4 +25,4 @@ jobs:
         working-directory: examples/
         run: |
           terraform init
-          terraform apply   
+          terraform apply -auto-approve 
