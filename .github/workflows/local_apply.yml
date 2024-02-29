@@ -24,5 +24,5 @@ jobs:
       - name: Terraform Workflow
         working-directory: examples/
         run: |
-          terrform init
-          terrform apply   
+          terraform init
+          terraform apply   
