@@ -27,9 +27,9 @@ module "ec2" {
 
   root_block_device = [
     {
-      volume_type = "gp3"
-      volume_size = 10
-      #delete_on_termination = false
+      volume_type           = "gp3"
+      volume_size           = 10
+      delete_on_termination = true
       tags = {
         Name = "root-block"
       }
