@@ -27,7 +27,7 @@ resource "aws_instance" "this" {
   instance_type               = var.instance_type
   user_data                   = var.user_data
   user_data_base64            = var.user_data_base64
-  availability_zone           = element(data.aws_availability_zones.azs.names, count.index)
+  #availability_zone           = var.aws_availability_zones.azs.names
   subnet_id                   = element(var.subnet_id, count.index)
   vpc_security_group_ids      = var.vpc_security_group_ids
   key_name                    = aws_key_pair.this.key_name
