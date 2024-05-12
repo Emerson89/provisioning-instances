@@ -1,23 +1,24 @@
 data "aws_availability_zones" "azs" {}
 
 locals {
-  azs = slice(data.aws_availability_zones.available.names, 0, 3)
+  azs = slice(data.aws_availability_zones.azs.names, 0, 3)
 }
 
 ## EC2
 module "ec2" {
   source = "github.com/Emerson89/provisioning-instances.git//?ref=master"
 
+  instance_count              = 2
   name                        = "ec2-terraform"
   instance_type               = "t3.micro"
   associate_public_ip_address = true
   key_name                    = "key"
   eip                         = false
   azs                         = element(local.azs, 0)
-  subnet_id                   = element(module.vpc.public_ids, 0)
+  subnet_id                   = [element(module.vpc.public_ids, 0)]
   image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
   owner                       = "099720109477"
-  vpc_security_group_ids      = module.sg.sg_id
+  vpc_security_group_ids      = [module.sg.sg_id]
 
   additional_policy = true
 
@@ -68,7 +69,7 @@ module "vpc" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags        = {
+  tags = {
     Environment = "hml"
   }
   environment = "hml"
@@ -92,7 +93,7 @@ module "sg" {
   vpc_id      = module.vpc.vpc_id
 
   rules_security_group = {
-    
+
     ## Rule ingress cidr_block
     ingress_rule_1 = {
       from_port   = 22

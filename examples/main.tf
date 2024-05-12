@@ -23,6 +23,32 @@ module "ec2" {
   associate_public_ip_address = false
   key_name                    = "key"
   eip                         = false
+  
+  additional_policy           = true
+
+  policy_additional = [
+    {
+      name = "policy-test"
+      policy = jsonencode({
+        Version = "2012-10-17",
+        Statement = [
+          {
+            Effect = "Allow",
+            Action = [
+              "s3:PutObject",
+              "s3:GetObject",
+              "s3:DeleteObject",
+              "s3:ListMultipartUploadParts",
+              "s3:AbortMultipartUpload",
+            ],
+            Resource = [
+              "arn:aws:s3:::test1234567678/*"
+            ],
+          },
+        ],
+      })
+    }
+  ]
 
   root_block_device = [
     {

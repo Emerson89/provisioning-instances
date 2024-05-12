@@ -80,6 +80,32 @@ module "ec2" {
   image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
   owner                       = "099720109477"
 
+  additional_policy           = true
+
+  policy_additional = [
+    {
+      name = "policy-test"
+      policy = jsonencode({
+        Version = "2012-10-17",
+        Statement = [
+          {
+            Effect = "Allow",
+            Action = [
+              "s3:PutObject",
+              "s3:GetObject",
+              "s3:DeleteObject",
+              "s3:ListMultipartUploadParts",
+              "s3:AbortMultipartUpload",
+            ],
+            Resource = [
+              "arn:aws:s3:::test1234567678/*"
+            ],
+          },
+        ],
+      })
+    }
+  ]
+
   root_block_device = [
     {
       volume_type = "gp3"
@@ -103,18 +129,20 @@ module "ec2" {
 | [aws_eip.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_iam_instance_profile.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_iam_role_policy_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_instance.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance) | resource |
 | [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [tls_private_key.this](https://registry.terraform.io/providers/hashicorp/tls/latest/docs/resources/private_key) | resource |
 | [aws_ami.img](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
-| [aws_availability_zones.azs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_additional_policy"></a> [additional\_policy](#input\_additional\_policy) | create policy | `bool` | `false` | no |
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to associate a public IP address with an instance in a VPC | `bool` | `false` | no |
+| <a name="input_azs"></a> [azs](#input\_azs) | AZ to start the instance in | `string` | `null` | no |
 | <a name="input_cpu_credits"></a> [cpu\_credits](#input\_cpu\_credits) | The credit option for CPU usage (unlimited or standard) | `string` | `null` | no |
 | <a name="input_create_instance"></a> [create\_instance](#input\_create\_instance) | If true, the launched EC2 instance will have detailed monitoring enabled | `bool` | `true` | no |
 | <a name="input_disable_api_termination"></a> [disable\_api\_termination](#input\_disable\_api\_termination) | If true, enables EC2 Instance Termination Protection | `bool` | `null` | no |
@@ -132,6 +160,7 @@ module "ec2" {
 | <a name="input_name"></a> [name](#input\_name) | Name to be used on EC2 instance created | `string` | `"ec2-by-terraform"` | no |
 | <a name="input_network_interface"></a> [network\_interface](#input\_network\_interface) | Customize network interfaces to be attached at instance boot time | `list(map(string))` | `[]` | no |
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner ami | `any` | `"amazon"` | no |
+| <a name="input_policy_additional"></a> [policy\_additional](#input\_policy\_additional) | additional policy | `list(any)` | `[]` | no |
 | <a name="input_private_ip"></a> [private\_ip](#input\_private\_ip) | Private IP address to associate with the instance in a VPC | `string` | `null` | no |
 | <a name="input_root_block_device"></a> [root\_block\_device](#input\_root\_block\_device) | Customize details about the root block device of the instance. See Block Devices below for details | `list(any)` | `[]` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The VPC Subnet ID to launch in | `list(string)` | <pre>[<br>  ""<br>]</pre> | no |
