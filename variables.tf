@@ -161,3 +161,21 @@ variable "instance_count" {
   type        = number
   default     = 1
 }
+
+variable "policy_additional" {
+  description = "additional policy"
+  type        = list(any)
+  default     = []
+}
+
+variable "additional_policy" {
+  description = "create policy"
+  type        = bool
+  default     = false
+}
+
+variable "azs" {
+  description = "AZ to start the instance in"
+  type        = string
+  default     = null
+}

@@ -8,8 +8,6 @@ data "aws_ami" "img" {
   }
 }
 
-data "aws_availability_zones" "azs" {}
-
 resource "tls_private_key" "this" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -27,7 +25,7 @@ resource "aws_instance" "this" {
   instance_type               = var.instance_type
   user_data                   = var.user_data
   user_data_base64            = var.user_data_base64
-  #availability_zone           = var.aws_availability_zones.azs.names
+  availability_zone           = var.azs
   subnet_id                   = element(var.subnet_id, count.index)
   vpc_security_group_ids      = var.vpc_security_group_ids
   key_name                    = aws_key_pair.this.key_name
@@ -142,6 +140,14 @@ resource "aws_iam_role_policy_attachment" "this" {
 
 resource "aws_iam_instance_profile" "this" {
   role = aws_iam_role.this.name
+}
+
+resource "aws_iam_role_policy" "this" {
+  for_each = var.additional_policy ? { for x in var.policy_additional : x.name => x } : {}
+
+  name   = each.value.name
+  role   = aws_iam_role.this.id
+  policy = each.value.policy
 }
 
 resource "aws_eip" "this" {
