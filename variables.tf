@@ -8,8 +8,8 @@ variable "create_instance" {
 
 variable "subnet_id" {
   description = "The VPC Subnet ID to launch in"
-  type        = list(string)
-  default     = [""]
+  type        = string
+  default     = ""
 }
 
 variable "name" {
@@ -178,4 +178,20 @@ variable "azs" {
   description = "AZ to start the instance in"
   type        = string
   default     = null
+}
+
+variable "additional_rules_security_group" {
+  description = "Rules security group"
+  type        = any
+  default     = {}
+}
+
+variable "use_data_ami" {
+  type    = bool
+  default = false
+}
+
+variable "ami" {
+  type    = string
+  default = ""
 }

@@ -1,4 +1,70 @@
+data "aws_subnet" "this" {
+  id = var.subnet_id
+}
+
+data "aws_vpc" "this" {
+  id = data.aws_subnet.this.vpc_id
+}
+
+data "aws_availability_zones" "azs" {}
+
+locals {
+  ingress_with_source_security_group = merge(
+    {
+      ingress = {
+        description = "Access network vpc"
+        protocol    = "tcp"
+        from_port   = 0
+        to_port     = 65535
+        type        = "ingress"
+        cidr_blocks = [data.aws_vpc.this.cidr_block]
+      }
+    },
+    var.additional_rules_security_group,
+  )
+}
+
+resource "aws_security_group" "this" {
+  vpc_id      = data.aws_subnet.this.vpc_id
+  name_prefix = "${var.name}-SG-"
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
+  }
+
+  tags = merge(
+    {
+      "Name" = "${var.name}-SG"
+    },
+    var.tags
+  )
+}
+
+resource "aws_security_group_rule" "this" {
+
+  for_each                 = local.ingress_with_source_security_group
+  from_port                = each.value.from_port
+  to_port                  = each.value.to_port
+  protocol                 = each.value.protocol
+  type                     = each.value.type
+  security_group_id        = aws_security_group.this.id
+  cidr_blocks              = lookup(each.value, "cidr_blocks", null)
+  description              = lookup(each.value, "description", null)
+  self                     = lookup(each.value, "self", null)
+  source_security_group_id = lookup(each.value, "source_security_group_id", null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 data "aws_ami" "img" {
+  count = var.use_data_ami ? 1 : 0
+
   most_recent = true
   owners      = ["${var.owner}"]
 
@@ -19,15 +85,14 @@ resource "aws_key_pair" "this" {
 }
 
 resource "aws_instance" "this" {
-  count = var.instance_count
 
-  ami                         = data.aws_ami.img.id
+  ami                         = var.use_data_ami ? data.aws_ami.img[0].id : var.ami
   instance_type               = var.instance_type
   user_data                   = var.user_data
   user_data_base64            = var.user_data_base64
-  availability_zone           = var.azs
-  subnet_id                   = element(var.subnet_id, count.index)
-  vpc_security_group_ids      = var.vpc_security_group_ids
+  availability_zone           = data.aws_subnet.this.availability_zone
+  subnet_id                   = var.subnet_id
+  vpc_security_group_ids      = [aws_security_group.this.id]
   key_name                    = aws_key_pair.this.key_name
   monitoring                  = var.monitoring
   iam_instance_profile        = aws_iam_instance_profile.this.name
@@ -108,7 +173,10 @@ resource "aws_instance" "this" {
     delete = lookup(var.timeouts, "delete", null)
   }
 
-  tags        = merge({ "Name" = "${var.name}-${count.index + 1}" }, var.tags)
+  tags = merge(
+    {
+      "Name" = "${var.name}"
+  }, var.tags)
   volume_tags = var.enable_volume_tags ? merge({ "Name" = var.name }, var.volume_tags) : null
 }
 
@@ -152,6 +220,6 @@ resource "aws_iam_role_policy" "this" {
 
 resource "aws_eip" "this" {
   count    = var.eip ? 1 : 0
-  instance = aws_instance.this[0].id
+  instance = aws_instance.this.id
   domain   = "vpc"
 }

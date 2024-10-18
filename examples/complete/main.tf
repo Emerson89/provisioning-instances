@@ -1,24 +1,27 @@
-data "aws_availability_zones" "azs" {}
-
-locals {
-  azs = slice(data.aws_availability_zones.azs.names, 0, 3)
-}
-
 ## EC2
 module "ec2" {
   source = "github.com/Emerson89/provisioning-instances.git//?ref=master"
 
-  instance_count              = 2
   name                        = "ec2-terraform"
   instance_type               = "t3.micro"
   associate_public_ip_address = true
   key_name                    = "key"
   eip                         = false
-  azs                         = element(local.azs, 0)
-  subnet_id                   = [element(module.vpc.public_ids, 0)]
+  subnet_id                   = element(module.vpc.public_ids, 0)
   image_name                  = "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"
   owner                       = "099720109477"
-  vpc_security_group_ids      = [module.sg.sg_id]
+
+  additional_rules_security_group = {
+
+    ingress_rule_1 = {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["172.16.3.10/32"]
+      description = "SSH"
+      type        = "ingress"
+    },
+  }
 
   additional_policy = true
 
@@ -84,28 +87,4 @@ module "vpc" {
   igwname = "my-igw"
   natname = "my-nat"
   rtname  = "my-rt"
-}
-
-module "sg" {
-  source      = "github.com/Emerson89/security-group-aws-terraform.git?ref=v1.0.0"
-  sgname      = "sgtest"
-  environment = "hml"
-  vpc_id      = module.vpc.vpc_id
-
-  rules_security_group = {
-
-    ## Rule ingress cidr_block
-    ingress_rule_1 = {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      type        = "ingress"
-      cidr_blocks = [module.vpc.vpc_cidr]
-    }
-  }
-
-  tags = {
-    Environment = "hml"
-  }
-
 }

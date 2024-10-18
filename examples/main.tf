@@ -23,8 +23,8 @@ module "ec2" {
   associate_public_ip_address = false
   key_name                    = "key"
   eip                         = false
-  
-  additional_policy           = true
+
+  additional_policy = true
 
   policy_additional = [
     {
