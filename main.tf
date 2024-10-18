@@ -1,5 +1,5 @@
 data "aws_subnet" "this" {
-  id = var.subnet_id
+  id = try(var.subnet_id, "")
 }
 
 data "aws_vpc" "this" {
