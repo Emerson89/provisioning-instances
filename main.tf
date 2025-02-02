@@ -1,5 +1,5 @@
 data "aws_subnet" "this" {
-  id = var.subnet_id
+  id = var.subnet_id[0]
 }
 
 data "aws_vpc" "this" {
