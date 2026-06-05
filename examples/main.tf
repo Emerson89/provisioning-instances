@@ -23,6 +23,9 @@ module "ec2" {
   associate_public_ip_address = false
   key_name                    = "key"
   eip                         = false
+  use_data_ami                = false
+  ami                         = "ami-00000000000000000"
+  subnet_id                   = "subnet-00000000"
 
   additional_policy = true
 
