@@ -1,5 +1,5 @@
 data "aws_subnet" "this" {
-  id = var.subnet_id
+  id = var.subnet_id != "" ? var.subnet_id : null
 }
 
 data "aws_vpc" "this" {
