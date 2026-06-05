@@ -1,5 +1,9 @@
+data "aws_subnets" "all" {
+  count = var.subnet_id == "" ? 1 : 0
+}
+
 data "aws_subnet" "this" {
-  id = var.subnet_id != "" ? var.subnet_id : null
+  id = var.subnet_id != "" ? var.subnet_id : data.aws_subnets.all[0].ids[0]
 }
 
 data "aws_vpc" "this" {
